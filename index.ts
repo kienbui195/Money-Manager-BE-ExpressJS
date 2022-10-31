@@ -3,12 +3,19 @@ import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import authRouter from "./src/routers/auth.route";
 import passport from "passport";
+import mongoose from "mongoose";
+import cors from 'cors';
 
 dotenv.config();
 
 const port = process.env.PORT || 3001;
 const app: Express = express();
 
+mongoose.connect('mongodb+srv://admin395:neCVCjNrS4269Yiv@casem5reactjs.8wszhbp.mongodb.net/money-manager-project', () => {
+    console.log('DB Connect!');
+})
+
+app.use(cors())
 app.use(express.static('src/public'));
 app.use(bodyParser.json());
 app.use(express.json());
