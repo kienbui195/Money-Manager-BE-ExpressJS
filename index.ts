@@ -25,7 +25,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/auth', authRouter);
 
 app.get('/*', (req, res) => {
-    res.send(500).json('Server Error')
+    res.send(200).json({type: 'error', message: '404 Not Found'})
 })
 
 app.listen(port, () => console.log(`Server is running at http://localhost:${port}`))
