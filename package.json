@@ -16,12 +16,8 @@
     "@types/mongoose": "^5.11.97",
     "@types/nodemailer": "^6.4.6",
     "@types/passport": "^1.0.11",
-<<<<<<< HEAD
-    "bcrypt": "^5.1.0",
-=======
     "@types/passport-google-oauth2": "^0.1.5",
     "@types/passport-local": "^1.0.34",
->>>>>>> dev
     "body-parser": "^1.20.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
