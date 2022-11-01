@@ -12,19 +12,36 @@ class User{
     }
 
     register = async(req: Request, res: Response)=>{
-        let user = req.body;
-        let checkUser = await UserModel.findOne({email: user.email})
-        if(!checkUser) {
-            user.password = await bcrypt.hash(user.password, 10);
-            user = await UserModel.create(user); 
-            res.status(201).json(user);  
+        try {
+            let user = req.body;
+            let checkUser = await UserModel.findOne({email: user.email})
+            if(!checkUser) {
+                user.password = await bcrypt.hash(user.password, 10);
+                user = await UserModel.create(user); 
+                res.status(201).json({ type: 'success', message: 'Lưu điểm thành công!' });  
+            }
+            else {
+                res.status(200).json({
+                    err: "User exited"
+                });
+            }
+        } catch (error) {
+            
         }
-        else {
-            res.status(200).json({
-                err: "User exited"
-            });
+      
+    }
+
+    getUserById = async (req : Request, res : Response) => {
+        const userId = req.params.id
+        const user = await UserModel.findById({_id : userId} ,req.body)
+        try {
+            res.status(200).json(user)
+        } catch (err) {
+            res.status(200).json({message : err})
         }
     }
+
+
     updateUser =  async(req: Request, res: Response)=>{
         console.log(req.body)
         let id = req.params.id;
@@ -38,7 +55,9 @@ class User{
             res.status(200).json(newUser);
         }
     }
-    deletePublisher = async (req: Request, res: Response) => {
+
+
+    deleteUser = async (req: Request, res: Response) => {
         let id = req.params.id
         let user = await UserModel.findById(id);
         if(!user) {
@@ -46,5 +65,11 @@ class User{
         }
         user?.delete();
         res.status(204).json();
+    }
+
+    verifyUser = async (req: Request, res: Response) => {
+        let id = req.params.id
+        let idUser = await UserModel.findByIdAndUpdate({_id : id},{isVerify : true})
+
     }
 }
