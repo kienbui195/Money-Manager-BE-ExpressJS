@@ -5,7 +5,7 @@ interface IUser {
     email: string, 
     password: string,
     isVerify: boolean,
-};
+}
 
 const userSchema = new Schema<IUser>({
     username: String,
