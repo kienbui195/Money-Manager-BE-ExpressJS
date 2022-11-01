@@ -16,7 +16,7 @@ mongoose.connect('mongodb+srv://admin395:neCVCjNrS4269Yiv@casem5reactjs.8wszhbp.
     console.log('DB Connect!');
 })
 
-app.use(cors())
+app.use(cors());
 app.use(express.static('src/public'));
 app.use(bodyParser.json());
 app.use(express.json());
@@ -27,7 +27,7 @@ app.use('/', userRouter);
 app.use('/auth', authRouter);
 
 app.get('/*', (req, res) => {
-    res.send(200).json({type: 'error', message: '404 Not Found'})
+    res.send(200).json({ type: 'error', message: '404 Not Found' });
 })
 
-app.listen(port, () => console.log(`Server is running at http://localhost:${port}`))
+app.listen(port, () => console.log(`Server is running at http://localhost:${port}`));
