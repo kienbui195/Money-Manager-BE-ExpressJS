@@ -53,7 +53,7 @@ class User{
         let id = req.params.id;
         let publisher = await UserModel.findById(id);
         if(!publisher) {
-            res.status(404).json()
+            res.status(200).json({message : "Update user fail!!!"})
         }
         else {
             let data = req.body;
@@ -81,7 +81,10 @@ class User{
             let idUser = await UserModel.findByIdAndUpdate({_id : id},{isVerify : true})
             if(idUser) {
                 res.status(200).json({message : "Verify successfully"})
-            } 
+            } else {
+                res.status(200).json({message : "Error Verify"})
+                
+            }
         } catch (error) {
             console.log(error)
             res.status(404).json({error : error})

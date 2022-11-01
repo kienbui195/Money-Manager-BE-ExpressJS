@@ -22,10 +22,11 @@ const verifyByEmail = (req: Request, res: Response, id: string) => {
     <div style="padding: 10px; background-color: #003375">
     <div style="padding: 10px; background-color: white;">
        
+    <h1 style="color: #ee1414; width: 100%; text-align: center; font-size: 20px;">Chào mừng bạn đến với Trang web quản lý tài chính C05 ^^</h1>
         <h1 style="color: #ee1414; width: 100%; text-align: center; font-size: 20px;">Chúc mừng bạn ! Bạn đã đăng kí thành công tài khoản !</h1>
 
         <div style="color: black; font-size: 35px; width: 100%; text-align: center; height: 50px;">
-        <h3 style="color: #ee1414; width: 100%; text-align: center; font-size: 20px;">Mời bạn click vào link <a href="http://localhost:3000/register/user/${id}">này</a> để kích hoạt tài khoản !!</h3>
+        <h3 style="color: #ee1414; width: 100%; text-align: center; font-size: 20px;">Mời bạn click vào link <a href="http://localhost:3000/register/user/${id}">này</a> để kích hoạt tài khoản !</h3>
         </div>
     </div>
     </div>
