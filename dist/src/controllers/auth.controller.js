@@ -29,5 +29,25 @@ class AuthController {
             }
         });
     }
+    postLogin(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const data = req.body;
+            const user = yield UserModel.findOne({ email: data.email });
+            if (user) {
+                if (data.password === user.password) {
+                    res.status(200).json({ type: 'success', message: 'Signed in successfully!' });
+                }
+                else {
+                    res.status(200).json({ type: 'error', message: 'Password is not correct!' });
+                }
+            }
+            else {
+                res.status(200).json({
+                    type: 'error',
+                    message: 'Account does not exist yet!',
+                });
+            }
+        });
+    }
 }
 module.exports = AuthController;

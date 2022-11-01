@@ -18,6 +18,22 @@ class AuthController {
         }
     }
 
+    async postLogin(req: Request, res: Response){
+        const data:any = req.body;
+        const user = await UserModel.findOne({email: data.email});
+        if(user){
+            if(data.password === user.password){
+                res.status(200).json({type: 'success', message: 'Signed in successfully!'});
+            }else{
+                res.status(200).json({ type: 'error', message: 'Password is not correct!' });
+            }
+        }else{
+            res.status(200).json({
+                type: 'error',
+                message: 'Account does not exist yet!',
+            });
+        }
+    }
 
 }
 
