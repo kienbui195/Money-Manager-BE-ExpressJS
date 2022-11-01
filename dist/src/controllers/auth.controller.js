@@ -73,7 +73,12 @@ class AuthController {
                         httpOnly: true,
                         maxAge: 1 * 15 * 1 * 1
                     })
-                        .json({ type: 'success', message: 'Signed in successfully!' });
+                        .json({
+                        type: 'success', message: {
+                            message: 'Signed in successfully!',
+                            data: user
+                        }
+                    });
                 }
                 else {
                     res.status(200).json({ type: 'error', message: 'Password is not correct!' });
