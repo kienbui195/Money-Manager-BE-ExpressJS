@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { UserModel } from "../schemas/user.model";
 import * as bcrypt from 'bcrypt'; 
 import console from "console";
+import verifyByEmail from "../tools/Verify Email/mail.setup";
 class User{
     getAllUser = async (req : Request, res : Response) => {
         const user = await UserModel.find()
@@ -19,8 +20,8 @@ class User{
             
             if(userId == null ) {
                 user.password = await bcrypt.hash(user.password, 10);
-                 let newuser = await UserModel.create(user); 
-                res.status(201).json({ userId : newuser._id, message:  "Register Successfully" });  
+                 let newuser = await UserModel.create(user);
+                res.status(201).json({ userId : newuser._id, message:  "Register Successfully" });
             }
             else {
                 res.status(200).json({
@@ -32,7 +33,6 @@ class User{
             console.log(error);
 			res.status(500).json('Server error');
         }
-      
     }
 
     getUserById = async (req : Request, res : Response) => {
@@ -70,6 +70,7 @@ class User{
         user?.delete();
         res.status(204).json();
     }
+
 
 
     postVerifyUser = async (req: Request, res: Response) => {
