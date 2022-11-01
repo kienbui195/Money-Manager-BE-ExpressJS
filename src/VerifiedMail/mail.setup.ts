@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 
 
 let VerifiedEmail = (req: any, res: any, _id: string) => {
-
+    let userId = req.params.id
     let transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
         port: 465,
@@ -21,14 +21,14 @@ let VerifiedEmail = (req: any, res: any, _id: string) => {
         <div style="padding: 10px; background-color: #003375">
         <div style="padding: 10px; background-color: white;">
             <h4 style="color: #ee1414; width: 100%; text-align: center; font-size: 20px;">Mã xác thực của bạn</h4>
-            <div style="color: black; font-size: 35px; width: 100%; text-align: center; height: 50px;">${_id}</div>
+            <div style="color: black; font-size: 35px; width: 100%; text-align: center; height: 50px;">http://localhost:3000/${userId}</div>
         </div>
         </div> 
     `;
 
     let mainOptions = {
         from: '395 Group',
-        to: `${req.body.emailRegister}`,
+        to: `${req.body.email}`,
         subject: 'Xác thực Tài khoản',
         text: '',
         html: content
