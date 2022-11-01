@@ -23,7 +23,6 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded({ extended: false }));
 
-app.use('/', userRouter);
 app.use('/auth', authRouter);
 
 app.get('/*', (req, res) => {

@@ -14,6 +14,7 @@ authRouter.post('/login', (req, res) => {
 
 authRouter.post('/register', (req, res) => authController.register(req, res).catch(() => res.status(500).json('Server error')))
 
-authRouter.post('/verify/:id', (req, res) => authController.postVerifyUser(req, res).catch(() => res.status(500).json('Server error')))
+authRouter.post('/verify/:id', (req, res) => authController.verifyUser(req, res).catch(() => res.status(500).json('Server error')))
+
 
 export default authRouter;
