@@ -1,5 +1,5 @@
 const { UserModel } = require('../schemas/user.model')
-import express, {Request, Response} from 'express';
+import express, { Request, Response } from 'express';
 import jwt from "jsonwebtoken";
 import verifyByEmail from "../tools/Verify Email/mail.setup";
 
@@ -28,25 +28,30 @@ class AuthController {
         }
     }
 
-    async postLogin(req: Request, res: Response){
-        const data:any = req.body;
-        const user = await UserModel.findOne({email: data.email});
-        if(user){
-            if(data.password === user.password){
+    async postLogin(req: Request, res: Response) {
+        const data: any = req.body;
+        const user = await UserModel.findOne({ email: data.email });
+        if (user) {
+            if (data.password === user.password) {
                 let payload = {
-                    user_id : user["id"],
-                    email : user["email"]
+                    user_id: user["id"],
+                    email: user["email"]
                 }
-                const token = jwt.sign(payload,'230193', {
-                    expiresIn : 36000,
+                const token = jwt.sign(payload, '230193', {
+                    expiresIn: 36000,
                 })
                 res.status(200)
-                .cookie('jwt_token', JSON.stringify(token), {
-                    httpOnly: true,
-                    maxAge: 1 * 15 * 1 * 1
-                  })
-                .json({type: 'success', message: 'Signed in successfully!'})
-            }else{
+                    .cookie('jwt_token', JSON.stringify(token), {
+                        httpOnly: true,
+                        maxAge: 1 * 15 * 1 * 1
+                    })
+                    .json({
+                        type: 'success', message: {
+                            message: 'Signed in successfully!',
+                            data: user
+                        }
+                    })
+            } else {
                 res.status(200).json({ type: 'error', message: 'Password is not correct!' });
             }
         } else {
@@ -62,13 +67,13 @@ class AuthController {
         try {
             let idUser = await UserModel.findByIdAndUpdate({ _id: id }, { isVerify: true })
             if (idUser) {
-                res.status(200).json({ type:'success',message: "Verify successfully" })
+                res.status(200).json({ type: 'success', message: "Verify successfully" })
             } else {
                 res.status(200).json({ type: 'error', message: "Error Verify" })
 
             }
         } catch (error) {
-            res.status(200).json({ type: 'error' , message: error })
+            res.status(200).json({ type: 'error', message: error })
         }
     }
 
