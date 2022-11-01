@@ -52,7 +52,7 @@ class AuthController {
                 }
             }
             catch (error) {
-                console.log(error);
+                res.status(500).json('Server error');
             }
         });
     }
