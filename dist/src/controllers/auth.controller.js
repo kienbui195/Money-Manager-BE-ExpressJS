@@ -50,4 +50,5 @@ class AuthController {
         });
     }
 }
-module.exports = AuthController;
+const authController = new AuthController();
+exports.default = authController;
