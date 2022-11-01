@@ -1,20 +1,30 @@
 const { UserModel } = require('../schemas/user.model')
 import express, {Request, Response} from 'express';
 import jwt from "jsonwebtoken";
+import verifyByEmail from "../tools/Verify Email/mail.setup";
+
 class AuthController {
-    async register(req: Request, res: Response) {
-        const data: any = req.body;
-        const user = await UserModel.findOne({ email: data.email });
-        if (!user) {
-            const newUser = {
-                username: data.username,
-                email: data.email,
-                password: data.password
-            };
-            await UserModel.create(newUser);
-            return res.status(200).json({ type: 'success', message: 'User created successfully!' });
-        } else {
-            return res.status(200).json({ type: 'error', message: 'User already exists!' });
+    register = async (req: Request, res: Response) => {
+        try {
+            let user = req.body;
+            let userId = await UserModel.findOne({ email: req.body.email })
+
+            if (userId == null) {
+                let newUser = await UserModel.create(user);
+                const newID = newUser.id
+                verifyByEmail(req, res, newID)
+                res.status(201).json({ type: 'success', message: "Register Successfully" });
+            }
+            else {
+                res.status(200).json({
+                    type: 'exist',
+                    message: "User already exists"
+                });
+            }
+
+        } catch (error) {
+            console.log(error);
+            res.status(500).json('Server error');
         }
     }
 
@@ -47,7 +57,20 @@ class AuthController {
         }
     }
 
-    
+    postVerifyUser = async (req: Request, res: Response) => {
+        let id = req.params.id
+        try {
+            let idUser = await UserModel.findByIdAndUpdate({ _id: id }, { isVerify: true })
+            if (idUser) {
+                res.status(200).json({ type:'success',message: "Verify successfully" })
+            } else {
+                res.status(200).json({ type: 'error', message: "Error Verify" })
+
+            }
+        } catch (error) {
+            res.status(200).json({ type: 'error' , message: error })
+        }
+    }
 
 }
 

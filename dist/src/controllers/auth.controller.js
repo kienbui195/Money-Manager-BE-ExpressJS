@@ -14,22 +14,44 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const { UserModel } = require('../schemas/user.model');
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const mail_setup_1 = __importDefault(require("../tools/Verify Email/mail.setup"));
 class AuthController {
-    register(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const data = req.body;
-            const user = yield UserModel.findOne({ email: data.email });
-            if (!user) {
-                const newUser = {
-                    username: data.username,
-                    email: data.email,
-                    password: data.password
-                };
-                yield UserModel.create(newUser);
-                return res.status(200).json({ type: 'success', message: 'User created successfully!' });
+    constructor() {
+        this.register = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                let user = req.body;
+                let userId = yield UserModel.findOne({ email: req.body.email });
+                if (userId == null) {
+                    let newUser = yield UserModel.create(user);
+                    const newID = newUser.id;
+                    (0, mail_setup_1.default)(req, res, newID);
+                    res.status(201).json({ type: 'success', message: "Register Successfully" });
+                }
+                else {
+                    res.status(200).json({
+                        type: 'exist',
+                        message: "User already exists"
+                    });
+                }
             }
-            else {
-                return res.status(200).json({ type: 'error', message: 'User already exists!' });
+            catch (error) {
+                console.log(error);
+                res.status(500).json('Server error');
+            }
+        });
+        this.postVerifyUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            let id = req.params.id;
+            try {
+                let idUser = yield UserModel.findByIdAndUpdate({ _id: id }, { isVerify: true });
+                if (idUser) {
+                    res.status(200).json({ type: 'success', message: "Verify successfully" });
+                }
+                else {
+                    res.status(200).json({ type: 'error', message: "Error Verify" });
+                }
+            }
+            catch (error) {
+                res.status(200).json({ type: 'error', message: error });
             }
         });
     }
