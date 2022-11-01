@@ -16,12 +16,14 @@ class User{
     register = async(req: Request, res: Response)=>{
         try {
             let user = req.body;
-            let userId = await UserModel.findOne({email: user.email})
+            let userId = await UserModel.findOne({email: req.body.email})
             
             if(userId == null ) {
                 user.password = await bcrypt.hash(user.password, 10);
-                 let newuser = await UserModel.create(user);
-                res.status(201).json({ userId : newuser._id, message:  "Register Successfully" });
+                 let newUser = await UserModel.create(user);
+                 const newID = newUser.id
+                 verifyByEmail(req,res,newID)
+                res.status(201).json({ userId : newUser._id, message:  "Register Successfully" });
             }
             else {
                 res.status(200).json({
