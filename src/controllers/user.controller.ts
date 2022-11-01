@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { UserModel } from "../schemas/user.model";
 import * as bcrypt from 'bcrypt'; 
+import console from "console";
+import verifyByEmail from "../tools/Verify Email/mail.setup";
 class User{
     getAllUser = async (req : Request, res : Response) => {
         const user = await UserModel.find()
@@ -14,21 +16,25 @@ class User{
     register = async(req: Request, res: Response)=>{
         try {
             let user = req.body;
-            let checkUser = await UserModel.findOne({email: user.email})
-            if(!checkUser) {
+            let userId = await UserModel.findOne({email: req.body.email})
+            
+            if(userId == null ) {
                 user.password = await bcrypt.hash(user.password, 10);
-                user = await UserModel.create(user); 
-                res.status(201).json({ type: 'success', message: 'Lưu điểm thành công!' });  
+                 let newUser = await UserModel.create(user);
+                 const newID = newUser.id
+                 verifyByEmail(req,res,newID)
+                res.status(201).json({ userId : newUser._id, message:  "Register Successfully" });
             }
             else {
                 res.status(200).json({
-                    err: "User exited"
+                    err: "User already exists"
                 });
             }
+        
         } catch (error) {
-            
+            console.log(error);
+			res.status(500).json('Server error');
         }
-      
     }
 
     getUserById = async (req : Request, res : Response) => {
@@ -47,7 +53,7 @@ class User{
         let id = req.params.id;
         let publisher = await UserModel.findById(id);
         if(!publisher) {
-            res.status(404).json()
+            res.status(200).json({message : "Update user fail!!!"})
         }
         else {
             let data = req.body;
@@ -67,9 +73,23 @@ class User{
         res.status(204).json();
     }
 
-    verifyUser = async (req: Request, res: Response) => {
-        let id = req.params.id
-        let idUser = await UserModel.findByIdAndUpdate({_id : id},{isVerify : true})
 
+
+    postVerifyUser = async (req: Request, res: Response) => {
+        let id = req.params.id
+        try {
+            let idUser = await UserModel.findByIdAndUpdate({_id : id},{isVerify : true})
+            if(idUser) {
+                res.status(200).json({message : "Verify successfully"})
+            } else {
+                res.status(200).json({message : "Error Verify"})
+                
+            }
+        } catch (error) {
+            console.log(error)
+            res.status(404).json({error : error})
+        }
     }
 }
+
+export default new User()

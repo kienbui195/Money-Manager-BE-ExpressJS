@@ -10,7 +10,7 @@ authRouter.post('/register', (req, res) => {
 
 authRouter.post('/login', (req, res) => {
     authController.postLogin(req, res).catch(() => res.status(500).json('server error'));
-}, auth);
+},auth);
 
 
 

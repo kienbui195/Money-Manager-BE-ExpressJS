@@ -31,9 +31,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+<<<<<<< HEAD
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const user_model_1 = require("../schemas/user.model");
 const bcrypt = __importStar(require("bcrypt"));
+const console_1 = __importDefault(require("console"));
+const mail_setup_1 = __importDefault(require("../tools/Verify Email/mail.setup"));
+=======
+Object.defineProperty(exports, "__esModule", { value: true });
+const user_model_1 = require("../schemas/user.model");
+const bcrypt = __importStar(require("bcrypt"));
+>>>>>>> ecafb75a09c5292ef2b151fc419a1d058141107f
 class User {
     constructor() {
         this.getAllUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -48,6 +59,19 @@ class User {
         this.register = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 let user = req.body;
+<<<<<<< HEAD
+                let userId = yield user_model_1.UserModel.findOne({ email: req.body.email });
+                if (userId == null) {
+                    user.password = yield bcrypt.hash(user.password, 10);
+                    let newUser = yield user_model_1.UserModel.create(user);
+                    const newID = newUser.id;
+                    (0, mail_setup_1.default)(req, res, newID);
+                    res.status(201).json({ userId: newUser._id, message: "Register Successfully" });
+                }
+                else {
+                    res.status(200).json({
+                        err: "User already exists"
+=======
                 let checkUser = yield user_model_1.UserModel.findOne({ email: user.email });
                 if (!checkUser) {
                     user.password = yield bcrypt.hash(user.password, 10);
@@ -57,10 +81,16 @@ class User {
                 else {
                     res.status(200).json({
                         err: "User exited"
+>>>>>>> ecafb75a09c5292ef2b151fc419a1d058141107f
                     });
                 }
             }
             catch (error) {
+<<<<<<< HEAD
+                console_1.default.log(error);
+                res.status(500).json('Server error');
+=======
+>>>>>>> ecafb75a09c5292ef2b151fc419a1d058141107f
             }
         });
         this.getUserById = (req, res) => __awaiter(this, void 0, void 0, function* () {
@@ -74,7 +104,11 @@ class User {
             }
         });
         this.updateUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
+<<<<<<< HEAD
+            console_1.default.log(req.body);
+=======
             console.log(req.body);
+>>>>>>> ecafb75a09c5292ef2b151fc419a1d058141107f
             let id = req.params.id;
             let publisher = yield user_model_1.UserModel.findById(id);
             if (!publisher) {
@@ -95,9 +129,28 @@ class User {
             user === null || user === void 0 ? void 0 : user.delete();
             res.status(204).json();
         });
+<<<<<<< HEAD
+        this.postVerifyUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            let id = req.params.id;
+            try {
+                let idUser = yield user_model_1.UserModel.findByIdAndUpdate({ _id: id }, { isVerify: true });
+                if (idUser) {
+                    res.status(200).json({ message: "Verify successfully" });
+                }
+            }
+            catch (error) {
+                console_1.default.log(error);
+                res.status(404).json({ error: error });
+            }
+        });
+    }
+}
+exports.default = new User();
+=======
         this.verifyUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
             let id = req.params.id;
             let idUser = yield user_model_1.UserModel.findByIdAndUpdate({ _id: id }, { isVerify: true });
         });
     }
 }
+>>>>>>> ecafb75a09c5292ef2b151fc419a1d058141107f
