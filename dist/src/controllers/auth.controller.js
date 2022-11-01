@@ -49,7 +49,7 @@ class AuthController {
                     res.status(200)
                         .cookie('jwt_token', JSON.stringify(token), {
                         httpOnly: true,
-                        maxAge: 60 * 60 * 24 * 7
+                        maxAge: 1 * 15 * 1 * 1
                     })
                         .json({ type: 'success', message: 'Signed in successfully!' });
                 }

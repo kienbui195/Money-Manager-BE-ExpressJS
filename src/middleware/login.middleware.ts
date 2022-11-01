@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction} from "express";
 import jwt from 'jsonwebtoken';
-export const SECRET_KEY = '190896';
+export const SECRET_KEY = '230193';
 
 export const auth = (req:Request, res: Response, next: NextFunction) => {
-    let authorization = req.headers.authorization;
+    let authorization = req.cookies.authorization;
     if (authorization) {
         let accessToken = authorization.split(' ')[1];
         if (!accessToken) {
