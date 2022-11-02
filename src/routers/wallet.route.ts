@@ -7,7 +7,6 @@ export const walletRoute = Router()
 
 
 
-walletRouter.put('/edit-money/:id', walletController.postAddMoneyToWallet)
 
 
 walletRoute.get('/getAll', walletController.getAlltWallet);
