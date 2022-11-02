@@ -6,6 +6,7 @@ import verifyByEmail from "../tools/Verify Email/mail.setup";
 export const SECRET_KEY = '190896';
 
 class AuthController {
+
     async register(req: Request, res: Response) {
         try {
             let user = req.body;
@@ -38,7 +39,6 @@ class AuthController {
                 if (data.password === user.password) {
                     let payload = {
                         user_id: user["id"],
-                        email: user["email"]
                     }
                     const token = jwt.sign(payload, '230193', {
                         expiresIn: 36000,
@@ -69,12 +69,12 @@ class AuthController {
 
     }
 
-    verifyUser = async (req: Request, res: Response) => {
-            let id = req.params.id
+    async verifyUser(req: Request, res: Response) {
+        let id = req.params.id
         try {
-            let idUser = await UserModel.findByIdAndUpdate({ _id: id }, { isVerify : { type : true} })
+            let idUser = await UserModel.findByIdAndUpdate({ _id: id }, { isVerify: true })
             if (idUser) {
-                res.status(200).json({ type:'success',message: "Verify successfully" })
+                res.status(200).json({ type: 'success', message: "Verify successfully" })
             } else {
                 await UserModel.findOneAndUpdate({ _id: id }, { isVerify: true })
                 res.status(200).json({ type: 'success', message: 'Verify Success' })
@@ -117,6 +117,65 @@ class AuthController {
             });
         }
     }
+
+    async loginWithGoogle(req: Request, res: Response) {
+        const data = req.body;
+        const user = await UserModel.findOne({ email: data.email })
+        try {
+            if (user) {
+                await UserModel.findOneAndUpdate({ email: data.email }, {
+                    google_id: data.google_id,
+                    isVerify: true,
+                    username: data.username
+                })
+                let payload = {
+                    user_id: user["id"]
+                }
+                const token = jwt.sign(payload, '230193', { expiresIn: 36000 })
+                res.status(200)
+                    .cookie('jwt_token', JSON.stringify(token), {
+                        httpOnly: true,
+                        maxAge: 1 * 15 * 1 * 1
+                    })
+                    .json({
+                        type: 'success', message: {
+                            message: 'Signed in successfully!',
+                            data: user
+                        }
+                    })
+            } else {
+                let newUser = new UserModel({
+                    username: data.username,
+                    google_id: data.google_id,
+                    isVerify: true,
+                    email: data.email,
+                    password: '',
+                })
+                newUser.save()
+                let payload = {
+                    user_id: newUser["id"]
+                }
+                const token = jwt.sign(payload, '230193', { expiresIn: 36000 })
+                if (token) {
+                    res.status(200)
+                    .cookie('jwt_token', JSON.stringify(token), {
+                        httpOnly: true,
+                        maxAge: 1 * 15 * 1 * 1
+                    })
+                    .json({
+                        type: 'success', message: {
+                            message: 'Signed in successfully!',
+                        }
+                    })
+                }
+                
+            }
+        } catch (err) {
+            res.status(500).json('Server error')
+        }
+
+    }
+
 }
 
 const authController = new AuthController();

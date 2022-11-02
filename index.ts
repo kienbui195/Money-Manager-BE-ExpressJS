@@ -1,7 +1,7 @@
 import express, { Express, Request, Response } from "express";
 // import dotenv from "dotenv";
 import bodyParser from "body-parser";
-import authRouter from "./src/routers/auth.route";
+import authRoute from "./src/routers/auth.route";
 import mongoose from "mongoose";
 import cors from 'cors';
 import { userRouter } from "./src/routers/user.route";
@@ -24,7 +24,7 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded({ extended: false }));
 
-app.use('/auth', authRouter);
+app.use('/auth', authRoute);
 app.use('/wallet', walletRoute);
 app.use('/transaction', transactionRoute)
 
