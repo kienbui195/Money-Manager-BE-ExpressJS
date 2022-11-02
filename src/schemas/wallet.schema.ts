@@ -18,7 +18,8 @@ const walletSchema = new Schema<IWallet>({
     money: {
         type: Number,
         default: 0
-    }
+    },
+
 });
 
 const WalletModel = model<IWallet>('Wallet', walletSchema);

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { UserModel } from "../schemas/user.model";
-import console from "console";
-class User {
+
+class UserController {
     getAllUser = async (req: Request, res: Response) => {
         const user = await UserModel.find()
         try {
@@ -50,4 +50,4 @@ class User {
     
 }
 
-export default new User()
+export default new UserController()

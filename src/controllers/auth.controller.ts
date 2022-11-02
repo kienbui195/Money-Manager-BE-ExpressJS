@@ -3,8 +3,10 @@ import express, { Request, Response } from 'express';
 import jwt from "jsonwebtoken";
 import verifyByEmail from "../tools/Verify Email/mail.setup";
 
+export const SECRET_KEY = '190896';
+
 class AuthController {
-    register = async (req: Request, res: Response) => {
+    async register(req: Request, res: Response) {
         try {
             let user = req.body;
             let userId = await UserModel.findOne({ email: req.body.email })
@@ -82,6 +84,39 @@ class AuthController {
         }
     }
 
+    async isLogin(req: Request, res: Response) {
+        try {
+            let authorization = req.headers.authorization;
+            if (authorization) {
+                let accessToken = authorization.split(' ')[1];
+                if (!accessToken) {
+                    res.status(200).json({ type: 'No', message: 'User is not logged in' });
+                } else {
+                    jwt.verify(accessToken, SECRET_KEY, (err: any, data: any) => {
+                        if (err) {
+                            res.status(200).json({
+                                type: 'No',
+                                error: err.message,
+                                message: 'User is not logged in'
+                            });
+                        } else {
+                            req.body.decoded = data;
+                            res.status(200).json({
+                                type: 'Yes', message: {
+                                    message: 'User is logged in',
+                                    data: req.body.decoded
+                                }
+                            })
+                        }
+                    });
+                }
+            }
+        } catch (err) {
+            res.status(500).json({
+                message: 'Server error'
+            });
+        }
+    }
 }
 
 const authController = new AuthController();
