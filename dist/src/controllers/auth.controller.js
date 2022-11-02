@@ -12,12 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.SECRET_KEY = void 0;
 const { UserModel } = require('../schemas/user.model');
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const mail_setup_1 = __importDefault(require("../tools/Verify Email/mail.setup"));
+exports.SECRET_KEY = '190896';
 class AuthController {
-    constructor() {
-        this.register = (req, res) => __awaiter(this, void 0, void 0, function* () {
+    register(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
             try {
                 let user = req.body;
                 let userId = yield UserModel.findOne({ email: req.body.email });
@@ -36,22 +38,6 @@ class AuthController {
             }
             catch (error) {
                 console.log(error);
-                res.status(500).json('Server error');
-            }
-        });
-        this.verifyUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            try {
-                let id = req.params.id;
-                const user = yield UserModel.findOne({ _id: id });
-                if (!user) {
-                    res.status(200).json({ type: 'notexist', message: 'Verify Fail' });
-                }
-                else {
-                    yield UserModel.findOneAndUpdate({ _id: id }, { isVerify: true });
-                    res.status(200).json({ type: 'success', message: 'Verify Success' });
-                }
-            }
-            catch (error) {
                 res.status(500).json('Server error');
             }
         });
@@ -95,6 +81,62 @@ class AuthController {
             }
             catch (err) {
                 res.status(500).json('Server error');
+            }
+        });
+    }
+    verifyUser(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                let id = req.params.id;
+                const user = yield UserModel.findOne({ _id: id });
+                if (!user) {
+                    res.status(200).json({ type: 'notexist', message: 'Verify Fail' });
+                }
+                else {
+                    yield UserModel.findOneAndUpdate({ _id: id }, { isVerify: true });
+                    res.status(200).json({ type: 'success', message: 'Verify Success' });
+                }
+            }
+            catch (error) {
+                res.status(500).json('Server error');
+            }
+        });
+    }
+    isLogin(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                let authorization = req.headers.authorization;
+                if (authorization) {
+                    let accessToken = authorization.split(' ')[1];
+                    if (!accessToken) {
+                        res.status(200).json({ type: 'No', message: 'User is not logged in' });
+                    }
+                    else {
+                        jsonwebtoken_1.default.verify(accessToken, exports.SECRET_KEY, (err, data) => {
+                            if (err) {
+                                res.status(200).json({
+                                    type: 'No',
+                                    error: err.message,
+                                    message: 'User is not logged in'
+                                });
+                            }
+                            else {
+                                req.body.decoded = data;
+                                res.status(200).json({
+                                    type: 'Yes', message: {
+                                        message: 'User is logged in',
+                                        data: req.body.decoded
+                                    }
+                                });
+                            }
+                        });
+                    }
+                }
+            }
+            catch (err) {
+                res.status(500).json({
+                    message: 'Server error'
+                });
             }
         });
     }
