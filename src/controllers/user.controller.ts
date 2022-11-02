@@ -23,16 +23,19 @@ class UserController {
 
 
     async updateUser (req: Request, res: Response) {
+
         console.log(req.body)
         let id = req.params.id;
         let publisher = await UserModel.findById(id);
         if (!publisher) {
-            res.status(200).json({type: 'notexist', message: "Update user fail!!!" })
-        }
-        else {
             let data = req.body;
             let newUser = await UserModel.findByIdAndUpdate({ _id: id }, data);
             res.status(200).json({type: 'success', message: newUser});
+        }
+        else {
+       
+            res.status(200).json({type: 'notexist', message: "Update user fail!!!" })
+
         }
     }
 

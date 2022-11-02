@@ -1,25 +1,25 @@
 import {Schema, model} from "mongoose";
+import { IUser } from "./user.model";
 
-interface IWallet {
+export interface IWallet {
+    icon : string
     name: string,
-    user_email: string, 
-    amount: number,
-    icon: string,
-    user_id: object
+    user_email: IUser, 
+    money: number,
 };
 
 const walletSchema = new Schema<IWallet>({
+    icon : String,
     name: String,
-    user_email: String,
-    amount: {
+    user_email: {
+        type : Schema.Types.ObjectId,
+        ref:'User'
+    },
+    money: {
         type: Number,
         default: 0
     },
-    icon: String,
-    user_id: {
-        type: Schema.Types.ObjectId,
-        ref: 'User'
-    }
+
 });
 
 const WalletModel = model<IWallet>('Wallet', walletSchema);
