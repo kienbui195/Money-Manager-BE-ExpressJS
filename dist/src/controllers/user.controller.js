@@ -40,12 +40,12 @@ class UserController {
             let id = req.params.id;
             let publisher = yield user_model_1.UserModel.findById(id);
             if (!publisher) {
-                res.status(200).json({ type: 'notexist', message: "Update user fail!!!" });
-            }
-            else {
                 let data = req.body;
                 let newUser = yield user_model_1.UserModel.findByIdAndUpdate({ _id: id }, data);
                 res.status(200).json({ type: 'success', message: newUser });
+            }
+            else {
+                res.status(200).json({ type: 'notexist', message: "Update user fail!!!" });
             }
         });
     }

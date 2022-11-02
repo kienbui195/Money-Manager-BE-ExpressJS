@@ -41,6 +41,25 @@ class AuthController {
                 res.status(500).json('Server error');
             }
         });
+<<<<<<< HEAD
+        this.verifyUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            let id = req.params.id;
+            try {
+                let idUser = yield UserModel.findByIdAndUpdate({ _id: id }, { isVerify: { type: true } });
+                if (idUser) {
+                    res.status(200).json({ type: 'success', message: "Verify successfully" });
+                }
+                else {
+                    yield UserModel.findOneAndUpdate({ _id: id }, { isVerify: true });
+                    res.status(200).json({ type: 'success', message: 'Verify Success' });
+                }
+            }
+            catch (error) {
+                res.status(500).json('Server error');
+            }
+        });
+=======
+>>>>>>> c662950f255407e79819335c5c480037cf291f9d
     }
     postLogin(req, res) {
         return __awaiter(this, void 0, void 0, function* () {

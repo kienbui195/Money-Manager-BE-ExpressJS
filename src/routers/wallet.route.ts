@@ -1,9 +1,18 @@
-import express, { Request, Response } from "express";
-import walletController from "../controllers/wallet.controller";
-import { auth } from "../middleware/login.middleware";
+import { Router } from "express";
 
-const walletRouter = express.Router();
+import User from "../controllers/user.controller";
+import walletController from "../controllers/wallet.controller";
+
+export const walletRoute = Router()
+
+
 
 walletRouter.put('/edit-money/:id', walletController.postAddMoneyToWallet)
 
-export default walletRouter;
+
+walletRoute.get('/getAll', walletController.getAlltWallet);
+walletRoute.get('/getId/:id', walletController.getWalletById);
+walletRoute.get('/total/:id', walletController.getTotalMoney);
+walletRoute.post('/create', walletController.createWallet);
+walletRoute.post('/update/:id', walletController.updateWallet);
+walletRoute.delete('/delete/:id', walletController.deleteWallet);

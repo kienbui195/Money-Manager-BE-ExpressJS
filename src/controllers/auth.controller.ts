@@ -69,12 +69,12 @@ class AuthController {
 
     }
 
-    async verifyUser(req: Request, res: Response) {
+    verifyUser = async (req: Request, res: Response) => {
+            let id = req.params.id
         try {
-            let id: string = req.params.id
-            const user = await UserModel.findOne({ _id: id })
-            if (!user) {
-                res.status(200).json({ type: 'notexist', message: 'Verify Fail' })
+            let idUser = await UserModel.findByIdAndUpdate({ _id: id }, { isVerify : { type : true} })
+            if (idUser) {
+                res.status(200).json({ type:'success',message: "Verify successfully" })
             } else {
                 await UserModel.findOneAndUpdate({ _id: id }, { isVerify: true })
                 res.status(200).json({ type: 'success', message: 'Verify Success' })
