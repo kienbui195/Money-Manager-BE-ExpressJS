@@ -7,7 +7,7 @@ export interface IUser {
     password: string,
     isVerify: boolean,
     google_id: string,
-    iwallet : IWallet
+    wallet_id : IWallet
 };
 
 const userSchema = new Schema<IUser>({
@@ -19,7 +19,7 @@ const userSchema = new Schema<IUser>({
         default: false
     },
     google_id: String,
-    iwallet : {
+    wallet_id : {
         type : Schema.Types.ObjectId,
         ref : 'Wallet'
     }

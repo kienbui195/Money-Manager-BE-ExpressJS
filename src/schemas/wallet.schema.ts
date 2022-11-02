@@ -4,18 +4,18 @@ import { IUser } from "./user.model";
 export interface IWallet {
     icon : string
     name: string,
-    user_email: IUser, 
-    money: number,
+    user_id: IUser, 
+    amount: number,
 };
 
 const walletSchema = new Schema<IWallet>({
     icon : String,
     name: String,
-    user_email: {
+    user_id: {
         type : Schema.Types.ObjectId,
         ref:'User'
     },
-    money: {
+    amount: {
         type: Number,
         default: 0
     },

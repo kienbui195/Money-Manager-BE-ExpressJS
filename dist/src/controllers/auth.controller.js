@@ -18,6 +18,24 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const mail_setup_1 = __importDefault(require("../tools/Verify Email/mail.setup"));
 exports.SECRET_KEY = '190896';
 class AuthController {
+    constructor() {
+        this.verifyUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            let id = req.params.id;
+            try {
+                let idUser = yield UserModel.findByIdAndUpdate({ _id: id }, { isVerify: { type: true } });
+                if (idUser) {
+                    res.status(200).json({ type: 'success', message: "Verify successfully" });
+                }
+                else {
+                    yield UserModel.findOneAndUpdate({ _id: id }, { isVerify: true });
+                    res.status(200).json({ type: 'success', message: 'Verify Success' });
+                }
+            }
+            catch (error) {
+                res.status(500).json('Server error');
+            }
+        });
+    }
     register(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -41,25 +59,6 @@ class AuthController {
                 res.status(500).json('Server error');
             }
         });
-<<<<<<< HEAD
-        this.verifyUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            let id = req.params.id;
-            try {
-                let idUser = yield UserModel.findByIdAndUpdate({ _id: id }, { isVerify: { type: true } });
-                if (idUser) {
-                    res.status(200).json({ type: 'success', message: "Verify successfully" });
-                }
-                else {
-                    yield UserModel.findOneAndUpdate({ _id: id }, { isVerify: true });
-                    res.status(200).json({ type: 'success', message: 'Verify Success' });
-                }
-            }
-            catch (error) {
-                res.status(500).json('Server error');
-            }
-        });
-=======
->>>>>>> c662950f255407e79819335c5c480037cf291f9d
     }
     postLogin(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -99,24 +98,6 @@ class AuthController {
                 }
             }
             catch (err) {
-                res.status(500).json('Server error');
-            }
-        });
-    }
-    verifyUser(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                let id = req.params.id;
-                const user = yield UserModel.findOne({ _id: id });
-                if (!user) {
-                    res.status(200).json({ type: 'notexist', message: 'Verify Fail' });
-                }
-                else {
-                    yield UserModel.findOneAndUpdate({ _id: id }, { isVerify: true });
-                    res.status(200).json({ type: 'success', message: 'Verify Success' });
-                }
-            }
-            catch (error) {
                 res.status(500).json('Server error');
             }
         });
