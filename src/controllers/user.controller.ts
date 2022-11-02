@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { UserModel } from "../schemas/user.model";
 
 class UserController {
-    getAllUser = async (req: Request, res: Response) => {
+    async getAllUser (req: Request, res: Response) {
         const user = await UserModel.find()
         try {
             res.status(200).json({ type: 'success', message: user })
@@ -11,7 +11,7 @@ class UserController {
         }
     }
 
-    getUserById = async (req: Request, res: Response) => {
+    async getUserById (req: Request, res: Response) {
         const userId = req.params.id
         const user = await UserModel.findById({ _id: userId }, req.body)
         try {
@@ -21,7 +21,9 @@ class UserController {
         }
     }
 
-    updateUser = async (req: Request, res: Response) => {
+
+    async updateUser (req: Request, res: Response) {
+
         console.log(req.body)
         let id = req.params.id;
         let publisher = await UserModel.findById(id);
@@ -38,7 +40,7 @@ class UserController {
     }
 
 
-    deleteUser = async (req: Request, res: Response) => {
+    async deleteUser (req: Request, res: Response) {
         let id = req.params.id
         let user = await UserModel.findById(id);
         if (!user) {

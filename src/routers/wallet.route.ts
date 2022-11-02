@@ -6,6 +6,10 @@ import walletController from "../controllers/wallet.controller";
 export const walletRoute = Router()
 
 
+
+walletRouter.put('/edit-money/:id', walletController.postAddMoneyToWallet)
+
+
 walletRoute.get('/getAll', walletController.getAlltWallet);
 walletRoute.get('/getId/:id', walletController.getWalletById);
 walletRoute.get('/total/:id', walletController.getTotalMoney);
