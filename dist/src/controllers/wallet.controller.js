@@ -39,10 +39,17 @@ class WalletController {
             const data = req.body;
             let id = req.params.id;
             const wallet = new wallet_schema_1.WalletModel({
+<<<<<<< HEAD
+                icon: req.body.icon,
+                name: req.body.name,
+                userId: id,
+                money: req.body.money
+=======
                 icon: data.icon,
                 name: data.name,
                 user_email: id,
                 amount: data.amount
+>>>>>>> cce7cb5affe79c8ef6f750ada73598b55623c948
             });
             let allWallet = yield wallet_schema_1.WalletModel.findOne({ name: wallet.name });
             try {
@@ -82,6 +89,31 @@ class WalletController {
                 res.status(500).json('Server error');
             }
         });
+<<<<<<< HEAD
+        this.deleteWallet = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            let id = req.params.id;
+            let wallet = yield wallet_schema_1.WalletModel.findById(id);
+            if (!wallet) {
+                res.status(200).json({ type: 'notexist', message: "No Wallet Delete" });
+            }
+            else {
+                wallet === null || wallet === void 0 ? void 0 : wallet.delete();
+                res.status(200).json({ type: 'success', message: 'Delete successfully!' });
+            }
+        });
+        this.getTotalMoney = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            let id = req.params.id;
+            let TotalMoney = yield wallet_schema_1.WalletModel.findById(id).populate('userId', 'username').exec((err, data) => {
+                if (err) {
+                    res.status(401).json({ message: `Không có kết quả tìm kiếm` });
+                    console.log(err);
+                }
+                console.log(data);
+                res.status(200).json(TotalMoney);
+            });
+        });
+    }
+=======
     }
     deleteWallet(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -101,5 +133,6 @@ class WalletController {
             }
         });
     }
+>>>>>>> cce7cb5affe79c8ef6f750ada73598b55623c948
 }
 exports.default = new WalletController();

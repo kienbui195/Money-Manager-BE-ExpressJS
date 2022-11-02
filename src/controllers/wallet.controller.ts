@@ -27,10 +27,11 @@ class WalletController {
         const data = req.body
         let id = req.params.id
         const wallet = new WalletModel({
-            icon:data.icon,
-            name:data.name,
-            user_email: id,
-            amount:data.amount
+            icon : req.body.icon,
+            name : req.body.name,
+            userId : id ,
+            // Lay id params
+            money : req.body.money
         })
         let allWallet = await WalletModel.findOne({ name: wallet.name })
         try {
@@ -83,17 +84,17 @@ class WalletController {
          
     }
 
-    /*async getTotalMoney (req: Request, res: Response) {
+    async getTotalMoney (req: Request, res: Response) {
         let id = req.params.id
-        let TotalMoney = await UserModel.findById(id).populate('wallet_id', 'amount').exec((err, data) {
+         await UserModel.findById(id).populate('wallet_id', 'amount').exec((err, data) => {
             if (err) {
                 res.status(401).json({ message: `Không có kết quả tìm kiếm` })
                 console.log(err);
             }
             console.log(data);
-            res.status(200).json(TotalMoney)
+            res.status(200).json(data)
         })
-    }*/
+    }
 }
 
 export default new WalletController()
