@@ -60,7 +60,7 @@ class AuthController {
     postVerifyUser = async (req: Request, res: Response) => {
         let id = req.params.id
         try {
-            let idUser = await UserModel.findByIdAndUpdate({ _id: id }, { isVerify: true })
+            let idUser = await UserModel.findByIdAndUpdate({ _id: id }, { isVerify : { type : true} })
             if (idUser) {
                 res.status(200).json({ type:'success',message: "Verify successfully" })
             } else {
