@@ -95,6 +95,7 @@ class AuthController {
                         res.status(200).json({
                             type: 'Yes',
                             message: 'User is Login',
+                            data: user.username
                         })
                     }
                 })
