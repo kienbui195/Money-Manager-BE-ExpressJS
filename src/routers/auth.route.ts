@@ -10,11 +10,12 @@ authRouter.post('/register', (req, res) => {
 
 authRouter.post('/login', (req, res) => {
     authController.postLogin(req, res).catch(() => res.status(500).json('server error'));
-}, auth);
+});
 
 authRouter.post('/register', (req, res) => authController.register(req, res).catch(() => res.status(500).json('Server error')))
 
 authRouter.post('/verify/:id', (req, res) => authController.verifyUser(req, res).catch(() => res.status(500).json('Server error')))
 
+authRouter.get('/is-login', (req, res) => authController.isLogin(req, res).catch(() => res.status(500).json('Server error')))
 
 export default authRouter;
