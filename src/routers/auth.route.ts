@@ -1,14 +1,12 @@
 import express, { Request, Response } from "express";
 import authController from '../controllers/auth.controller'
 
-const authRouter = express.Router();
+const authRoute = express.Router();
 
-authRouter.post('/register', authController.register)
+authRoute.post('/register', authController.register);
+authRoute.post('/login', authController.postLogin);
+authRoute.post('/verify/:id', authController.verifyUser);
+authRoute.get('/is-login', authController.isLogin);
+authRoute.post('/login-gg', authController.loginWithGoogle);
 
-authRouter.post('/login', authController.postLogin);
-
-authRouter.post('/verify/:id', authController.verifyUser)
-
-authRouter.get('/is-login', authController.isLogin)
-
-export default authRouter;
+export default authRoute;
