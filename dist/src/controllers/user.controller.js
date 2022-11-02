@@ -11,8 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const user_model_1 = require("../schemas/user.model");
 class UserController {
-    constructor() {
-        this.getAllUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
+    getAllUser(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
             const user = yield user_model_1.UserModel.find();
             try {
                 res.status(200).json({ type: 'success', message: user });
@@ -21,7 +21,9 @@ class UserController {
                 res.status(200).json({ type: 'error', message: err });
             }
         });
-        this.getUserById = (req, res) => __awaiter(this, void 0, void 0, function* () {
+    }
+    getUserById(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
             const userId = req.params.id;
             const user = yield user_model_1.UserModel.findById({ _id: userId }, req.body);
             try {
@@ -31,20 +33,24 @@ class UserController {
                 res.status(200).json({ type: 'error', message: err });
             }
         });
-        this.updateUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
+    }
+    updateUser(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
             console.log(req.body);
             let id = req.params.id;
             let publisher = yield user_model_1.UserModel.findById(id);
             if (!publisher) {
-                res.status(200).json({ type: 'notexist', message: "Update user fail!!!" });
-            }
-            else {
                 let data = req.body;
                 let newUser = yield user_model_1.UserModel.findByIdAndUpdate({ _id: id }, data);
                 res.status(200).json({ type: 'success', message: newUser });
             }
+            else {
+                res.status(200).json({ type: 'notexist', message: "Update user fail!!!" });
+            }
         });
-        this.deleteUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
+    }
+    deleteUser(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
             let id = req.params.id;
             let user = yield user_model_1.UserModel.findById(id);
             if (!user) {

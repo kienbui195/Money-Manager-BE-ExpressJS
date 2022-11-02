@@ -1,9 +1,11 @@
-import express, { Request, Response } from "express";
+import { Router } from "express";
 import walletController from "../controllers/wallet.controller";
-import { auth } from "../middleware/login.middleware";
 
-const walletRouter = express.Router();
+export const walletRoute = Router()
 
-walletRouter.post('/add-money', (req, res) => walletController.postAddMoneyToWallet(req, res).catch(err => res.status(500).json('Server error')))
-
-export default walletRouter;
+walletRoute.get('/getAll', walletController.getAllWallet);
+walletRoute.get('/getId/:id', walletController.getWalletById);
+walletRoute.get('/total/:id', walletController.getTotalMoney);
+walletRoute.post('/create/:id', walletController.createWallet);
+walletRoute.post('/update/:id', walletController.updateWallet);
+walletRoute.delete('/delete/:id', walletController.deleteWallet);
