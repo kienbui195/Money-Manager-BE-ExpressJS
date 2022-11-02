@@ -14,7 +14,7 @@ const userSchema = new mongoose_1.Schema({
     google_id: String,
     iwallet: {
         type: mongoose_1.Schema.Types.ObjectId,
-        refs: 'Wallet'
+        ref: 'Wallet'
     }
 });
 const UserModel = (0, mongoose_1.model)('User', userSchema);

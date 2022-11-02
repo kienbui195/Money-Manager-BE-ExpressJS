@@ -9,8 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-<<<<<<< HEAD
-const user_model_1 = require("../schemas/user.model");
 const wallet_schema_1 = require("../schemas/wallet.schema");
 class WalletController {
     constructor() {
@@ -35,25 +33,10 @@ class WalletController {
         });
         this.createWallet = (req, res) => __awaiter(this, void 0, void 0, function* () {
             let id = req.params.id;
-            // let newWallet = await WalletModel.findById(id).populate('user_email','email').exec((err,data)=> {
-            //     if(err){
-            //         res.status(401).json({message : `Không có kết quả tìm kiếm` })
-            //         console.log(err); 
-            //     }
-            //     console.log(data);    
-            //     const wallet = new WalletModel({
-            //         icon : req.body.icon,
-            //         name : req.body.name,
-            //         user_email : data ,
-            //         money : req.body.money
-            //     })
-            //     wallet.save()
-            //     res.status(200).json(newWallet)  
-            // })
             const wallet = new wallet_schema_1.WalletModel({
                 icon: req.body.icon,
                 name: req.body.name,
-                user_email: req.body.id,
+                userId: id,
                 money: req.body.money
             });
             let allWallet = yield wallet_schema_1.WalletModel.findOne({ name: wallet.name });
@@ -103,7 +86,7 @@ class WalletController {
         });
         this.getTotalMoney = (req, res) => __awaiter(this, void 0, void 0, function* () {
             let id = req.params.id;
-            let TotalMoney = yield user_model_1.UserModel.findById(id).populate('iwallet', 'money').exec((err, data) => {
+            let TotalMoney = yield wallet_schema_1.WalletModel.findById(id).populate('userId', 'username').exec((err, data) => {
                 if (err) {
                     res.status(401).json({ message: `Không có kết quả tìm kiếm` });
                     console.log(err);
@@ -115,22 +98,3 @@ class WalletController {
     }
 }
 exports.default = new WalletController();
-=======
-const wallet_schema_1 = require("../schemas/wallet.schema");
-class WalletController {
-    postAddMoneyToWallet(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const id = req.params.id;
-                yield wallet_schema_1.WalletModel.findOneAndUpdate({ _id: id }, { amount: req.body.amount });
-                res.status(200).json({ type: 'success', message: 'Update Successfully!' });
-            }
-            catch (err) {
-                res.status(500).json('Server error');
-            }
-        });
-    }
-}
-const walletController = new WalletController();
-exports.default = walletController;
->>>>>>> c662950f255407e79819335c5c480037cf291f9d

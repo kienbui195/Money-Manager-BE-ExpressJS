@@ -9,12 +9,8 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const auth_route_1 = __importDefault(require("./src/routers/auth.route"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const cors_1 = __importDefault(require("cors"));
-<<<<<<< HEAD
 const wallet_route_1 = require("./src/routers/wallet.route");
-=======
-const wallet_route_1 = __importDefault(require("./src/routers/wallet.route"));
 const transaction_route_1 = __importDefault(require("./src/routers/transaction.route"));
->>>>>>> c662950f255407e79819335c5c480037cf291f9d
 // dotenv.config();
 const port = process.env.PORT || 3001;
 const app = (0, express_1.default)();
@@ -28,12 +24,8 @@ app.use(express_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
 app.use(express_1.default.urlencoded({ extended: false }));
 app.use('/auth', auth_route_1.default);
-<<<<<<< HEAD
 app.use('/wallet', wallet_route_1.walletRoute);
-=======
-app.use('/wallet', wallet_route_1.default);
 app.use('/transaction', transaction_route_1.default);
->>>>>>> c662950f255407e79819335c5c480037cf291f9d
 app.get('/*', (req, res) => {
     res.send(200).json({ type: 'error', message: '404 Not Found' });
 });
