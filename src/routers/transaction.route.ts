@@ -3,9 +3,6 @@ import transactionController from "../controllers/transaction.controller"
 
 const transactionRoute = express.Router();
 
-transactionRoute.post('/add-transaction', (req, res) =>
-    transactionController.postAddTransaction(req, res)
-        .catch(() =>res.status(500).json('Server error'))
-)
+transactionRoute.post('/add-transaction', transactionController.postAddTransaction)
 
 export default transactionRoute;

@@ -1,21 +1,14 @@
 import express, { Request, Response } from "express";
-import { auth } from "../middleware/login.middleware";
 import authController from '../controllers/auth.controller'
 
 const authRouter = express.Router();
 
-authRouter.post('/register', (req, res) => {
-    authController.register(req, res).catch(() => { res.status(500).json('Server error') });
-})
+authRouter.post('/register', authController.register)
 
-authRouter.post('/login', (req, res) => {
-    authController.postLogin(req, res).catch(() => res.status(500).json('server error'));
-});
+authRouter.post('/login', authController.postLogin);
 
-authRouter.post('/register', (req, res) => authController.register(req, res).catch(() => res.status(500).json('Server error')))
+authRouter.post('/verify/:id', authController.verifyUser)
 
-authRouter.post('/verify/:id', (req, res) => authController.verifyUser(req, res).catch(() => res.status(500).json('Server error')))
-
-authRouter.get('/is-login', (req, res) => authController.isLogin(req, res).catch(() => res.status(500).json('Server error')))
+authRouter.get('/is-login', authController.isLogin)
 
 export default authRouter;

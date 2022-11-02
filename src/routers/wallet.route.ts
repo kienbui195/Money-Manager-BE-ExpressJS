@@ -4,6 +4,6 @@ import { auth } from "../middleware/login.middleware";
 
 const walletRouter = express.Router();
 
-walletRouter.put('/edit-money/:id', (req, res) => walletController.postAddMoneyToWallet(req, res).catch(() => res.status(500).json('Server error')))
+walletRouter.put('/edit-money/:id', walletController.postAddMoneyToWallet)
 
 export default walletRouter;
