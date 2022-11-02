@@ -8,13 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const user_model_1 = require("../schemas/user.model");
-const console_1 = __importDefault(require("console"));
-class User {
+class UserController {
     constructor() {
         this.getAllUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
             const user = yield user_model_1.UserModel.find();
@@ -36,7 +32,7 @@ class User {
             }
         });
         this.updateUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            console_1.default.log(req.body);
+            console.log(req.body);
             let id = req.params.id;
             let publisher = yield user_model_1.UserModel.findById(id);
             if (!publisher) {
@@ -59,4 +55,4 @@ class User {
         });
     }
 }
-exports.default = new User();
+exports.default = new UserController();

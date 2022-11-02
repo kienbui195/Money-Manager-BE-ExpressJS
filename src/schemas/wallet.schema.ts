@@ -4,6 +4,7 @@ interface IWallet {
     name: string,
     user_email: string, 
     amount: number,
+    icon: string
 };
 
 const walletSchema = new Schema<IWallet>({
@@ -12,7 +13,8 @@ const walletSchema = new Schema<IWallet>({
     amount: {
         type: Number,
         default: 0
-    }
+    },
+    icon: String
 });
 
 const WalletModel = model<IWallet>('Wallet', walletSchema);
