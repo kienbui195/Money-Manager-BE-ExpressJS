@@ -12,7 +12,7 @@ const userSchema = new mongoose_1.Schema({
         default: false
     },
     google_id: String,
-    iwallet: {
+    wallet_id: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: 'Wallet'
     }

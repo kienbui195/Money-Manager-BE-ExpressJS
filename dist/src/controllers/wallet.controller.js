@@ -11,52 +11,68 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const wallet_schema_1 = require("../schemas/wallet.schema");
 class WalletController {
-    constructor() {
-        this.getAlltWallet = (req, res) => __awaiter(this, void 0, void 0, function* () {
+    getAllWallet(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
             const wallet = yield wallet_schema_1.WalletModel.find();
             try {
                 res.status(200).json({ type: 'success', message: wallet });
             }
             catch (err) {
-                res.status(201).json({ type: 'error', message: err });
+                res.status(500).json('Server');
             }
         });
-        this.getWalletById = (req, res) => __awaiter(this, void 0, void 0, function* () {
+    }
+    getWalletById(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
             let id = req.body.id;
             const wallet = yield wallet_schema_1.WalletModel.findById({ _id: id });
             try {
                 res.status(200).json({ type: 'success', message: wallet });
             }
             catch (err) {
-                res.status(201).json({ type: 'error', message: err });
+                res.status(500).json('Server error');
             }
         });
-        this.createWallet = (req, res) => __awaiter(this, void 0, void 0, function* () {
+    }
+    createWallet(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const data = req.body;
             let id = req.params.id;
             const wallet = new wallet_schema_1.WalletModel({
+<<<<<<< HEAD
                 icon: req.body.icon,
                 name: req.body.name,
                 userId: id,
                 money: req.body.money
+=======
+                icon: data.icon,
+                name: data.name,
+                user_email: id,
+                amount: data.amount
+>>>>>>> cce7cb5affe79c8ef6f750ada73598b55623c948
             });
             let allWallet = yield wallet_schema_1.WalletModel.findOne({ name: wallet.name });
             try {
                 if (!allWallet) {
                     wallet.save();
-                    res.status(200).json({ type: 'success', message: {
+                    res.status(200).json({
+                        type: 'success', message: {
                             wallet: wallet,
                             message: "Create Wallet Successfully"
-                        } });
+                        }
+                    });
                 }
                 else {
-                    res.status(201).json({ type: 'error', message: "Wallet's all ready exits" });
+                    res.status(200).json({ type: 'error', message: "Wallet's all ready exits" });
                 }
             }
             catch (error) {
-                res.status(200).json({ type: 'error', message: error });
+                res.status(500).json('Server error');
             }
         });
-        this.updateWallet = (req, res) => __awaiter(this, void 0, void 0, function* () {
+    }
+    updateWallet(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
             const wallet = req.body;
             let idWallet = req.params.id;
             let walletFind = yield wallet_schema_1.WalletModel.findById(idWallet);
@@ -70,9 +86,10 @@ class WalletController {
                 }
             }
             catch (error) {
-                res.status(201).json({ type: 'error', message: error });
+                res.status(500).json('Server error');
             }
         });
+<<<<<<< HEAD
         this.deleteWallet = (req, res) => __awaiter(this, void 0, void 0, function* () {
             let id = req.params.id;
             let wallet = yield wallet_schema_1.WalletModel.findById(id);
@@ -96,5 +113,26 @@ class WalletController {
             });
         });
     }
+=======
+    }
+    deleteWallet(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let id = req.params.id;
+            try {
+                let wallet = yield wallet_schema_1.WalletModel.findById(id);
+                if (!wallet) {
+                    res.status(200).json({ type: 'notexist', message: "No Wallet Delete" });
+                }
+                else {
+                    wallet === null || wallet === void 0 ? void 0 : wallet.delete();
+                    res.status(200).json({ type: 'success', message: 'Delete successfully!' });
+                }
+            }
+            catch (err) {
+                res.status(500).json('Server error');
+            }
+        });
+    }
+>>>>>>> cce7cb5affe79c8ef6f750ada73598b55623c948
 }
 exports.default = new WalletController();

@@ -1,15 +1,9 @@
 import { Router } from "express";
-
-import User from "../controllers/user.controller";
 import walletController from "../controllers/wallet.controller";
 
 export const walletRoute = Router()
 
-
-
-
-
-walletRoute.get('/getAll', walletController.getAlltWallet);
+walletRoute.get('/getAll', walletController.getAllWallet);
 walletRoute.get('/getId/:id', walletController.getWalletById);
 walletRoute.get('/total/:id', walletController.getTotalMoney);
 walletRoute.post('/create/:id', walletController.createWallet);
