@@ -14,16 +14,9 @@ class WalletController {
     postAddMoneyToWallet(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const data = req.body;
-                const wallet = yield wallet_schema_1.WalletModel.findOne({ _id: data.id });
-                if (wallet) {
-                    let newAmount = wallet.amount + data.amount;
-                    yield wallet_schema_1.WalletModel.findOneAndUpdate({ _id: data.id }, { amount: newAmount });
-                    res.status(200).json({ type: 'success', message: 'Update Successfully!' });
-                }
-                else {
-                    res.status(200).json({ type: 'notexist', message: 'Not Exist The Wallet!' });
-                }
+                const id = req.params.id;
+                yield wallet_schema_1.WalletModel.findOneAndUpdate({ _id: id }, { amount: req.body.amount });
+                res.status(200).json({ type: 'success', message: 'Update Successfully!' });
             }
             catch (err) {
                 res.status(500).json('Server error');
