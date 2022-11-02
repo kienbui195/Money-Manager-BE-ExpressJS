@@ -12,6 +12,7 @@ export const auth = (req:Request, res: Response, next: NextFunction) => {
             });
         } else {
             jwt.verify(accessToken, SECRET_KEY, (err: any, data: any) => {
+                
                 if (err) {
                     res.status(200).json({
                         error: err.message,

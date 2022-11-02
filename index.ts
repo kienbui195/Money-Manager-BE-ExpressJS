@@ -5,6 +5,7 @@ import authRouter from "./src/routers/auth.route";
 import mongoose from "mongoose";
 import cors from 'cors';
 import { userRouter } from "./src/routers/user.route";
+import { walletRoute } from "./src/routers/wallet.route";
 
 // dotenv.config();
 
@@ -22,8 +23,8 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded({ extended: false }));
 
-app.use('/', userRouter);
 app.use('/auth', authRouter);
+app.use('/wallet', walletRoute);
 
 app.get('/*', (req, res) => {
     res.send(200).json({ type: 'error', message: '404 Not Found' });
