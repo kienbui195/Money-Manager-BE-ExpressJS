@@ -56,14 +56,11 @@ class AuthController {
                             expiresIn: 36000,
                         });
                         res.status(200)
-                            .cookie('jwt_token', JSON.stringify(token), {
-                            httpOnly: true,
-                            maxAge: 1 * 15 * 1 * 1
-                        })
                             .json({
-                            type: 'success', message: {
+                            type: 'success', data: {
                                 message: 'Signed in successfully!',
-                                data: user
+                                data: user,
+                                token: token
                             }
                         });
                     }
@@ -103,33 +100,28 @@ class AuthController {
     }
     isLogin(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            const user = yield UserModel.findOne({ _id: req.body.id });
             try {
-                let authorization = req.headers.authorization;
-                if (authorization) {
-                    let accessToken = authorization.split(' ')[1];
-                    if (!accessToken) {
-                        res.status(200).json({ type: 'No', message: 'User is not logged in' });
-                    }
-                    else {
-                        jsonwebtoken_1.default.verify(accessToken, exports.SECRET_KEY, (err, data) => {
-                            if (err) {
-                                res.status(200).json({
-                                    type: 'No',
-                                    error: err.message,
-                                    message: 'User is not logged in'
-                                });
-                            }
-                            else {
-                                req.body.decoded = data;
-                                res.status(200).json({
-                                    type: 'Yes', message: {
-                                        message: 'User is logged in',
-                                        data: req.body.decoded
-                                    }
-                                });
-                            }
-                        });
-                    }
+                let token = req.body["token"];
+                if (token) {
+                    jsonwebtoken_1.default.verify(token, '230193', (err, decoded) => {
+                        if (err) {
+                            return res.status(200).json({ type: 'No', message: 'Unauthorized' });
+                        }
+                        else {
+                            req.decoded = decoded;
+                            res.status(200).json({
+                                type: 'Yes',
+                                message: 'User is Login',
+                            });
+                        }
+                    });
+                }
+                else {
+                    return res.status(200).json({
+                        type: 'error',
+                        message: 'No token provided'
+                    });
                 }
             }
             catch (err) {
@@ -155,14 +147,11 @@ class AuthController {
                     };
                     const token = jsonwebtoken_1.default.sign(payload, '230193', { expiresIn: 36000 });
                     res.status(200)
-                        .cookie('jwt_token', JSON.stringify(token), {
-                        httpOnly: true,
-                        maxAge: 1 * 15 * 1 * 1
-                    })
                         .json({
-                        type: 'success', message: {
+                        type: 'success', data: {
                             message: 'Signed in successfully!',
-                            data: user
+                            data: user,
+                            token: token
                         }
                     });
                 }
@@ -174,23 +163,19 @@ class AuthController {
                         email: data.email,
                         password: '',
                     });
-                    newUser.save();
+                    yield newUser.save();
                     let payload = {
                         user_id: newUser["id"]
                     };
                     const token = jsonwebtoken_1.default.sign(payload, '230193', { expiresIn: 36000 });
-                    if (token) {
-                        res.status(200)
-                            .cookie('jwt_token', JSON.stringify(token), {
-                            httpOnly: true,
-                            maxAge: 1 * 15 * 1 * 1
-                        })
-                            .json({
-                            type: 'success', message: {
-                                message: 'Signed in successfully!',
-                            }
-                        });
-                    }
+                    res.status(200)
+                        .json({
+                        type: 'success', data: {
+                            message: 'Signed in successfully!',
+                            data: newUser,
+                            token: token
+                        }
+                    });
                 }
             }
             catch (err) {

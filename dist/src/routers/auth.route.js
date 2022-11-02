@@ -9,6 +9,6 @@ const authRoute = express_1.default.Router();
 authRoute.post('/register', auth_controller_1.default.register);
 authRoute.post('/login', auth_controller_1.default.postLogin);
 authRoute.post('/verify/:id', auth_controller_1.default.verifyUser);
-authRoute.get('/is-login', auth_controller_1.default.isLogin);
+authRoute.post('/is-login', auth_controller_1.default.isLogin);
 authRoute.post('/login-gg', auth_controller_1.default.loginWithGoogle);
 exports.default = authRoute;

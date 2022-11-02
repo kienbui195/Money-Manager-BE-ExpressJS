@@ -7,7 +7,7 @@ export interface IUser {
     password: string,
     isVerify: boolean,
     google_id: string,
-    wallet_id : IWallet
+    wallet_id: IWallet,
 };
 
 const userSchema = new Schema<IUser>({
@@ -22,7 +22,7 @@ const userSchema = new Schema<IUser>({
     wallet_id : {
         type : Schema.Types.ObjectId,
         ref : 'Wallet'
-    }
+    },
 });
 
 const UserModel = model<IUser>('User', userSchema);
