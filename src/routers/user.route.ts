@@ -1,18 +1,8 @@
-import { model, Schema } from "mongoose"
+import { Router } from "express";
+import User from "../controllers/user.controller";
+import verifyByEmail from "../tools/Verify Email/mail.setup";
 
+export const userRouter = Router()
 
-export interface IUser {
-    username?: string;
-    email?: string;
-    password?: string
-    
-}
-
-const userSchema = new Schema<IUser>({
-    username: String,
-    email: String,
-    password: String
-});
-
-const User = model<IUser>('User', userSchema);
-export {User}
+userRouter.post('/register', User.register )
+userRouter.post('/verify/:id', User.postVerifyUser)

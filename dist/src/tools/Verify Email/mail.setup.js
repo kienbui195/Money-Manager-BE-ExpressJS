@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const nodemailer_1 = __importDefault(require("nodemailer"));
-const verifyByEmail = (req, res, link) => {
+const verifyByEmail = (req, res, id) => {
     let transporter = nodemailer_1.default.createTransport({
         host: "smtp.gmail.com",
         port: 465,
@@ -21,8 +21,13 @@ const verifyByEmail = (req, res, link) => {
     content += `
     <div style="padding: 10px; background-color: #003375">
     <div style="padding: 10px; background-color: white;">
-        <h4 style="color: #ee1414; width: 100%; text-align: center; font-size: 20px;">Nhấn vào link dưới đây để xác thực tài khoản của bạn</h4>
-        <div style="color: black; font-size: 35px; width: 100%; text-align: center; height: 50px;">${link}</div>
+       
+    <h1 style="color: #ee1414; width: 100%; text-align: center; font-size: 20px;">Chào mừng bạn đến với Trang web quản lý tài chính C05 ^^</h1>
+        <h1 style="color: #ee1414; width: 100%; text-align: center; font-size: 20px;">Chúc mừng bạn ! Bạn đã đăng kí thành công tài khoản !</h1>
+
+        <div style="color: black; font-size: 35px; width: 100%; text-align: center; height: 50px;">
+        <h3 style="color: #ee1414; width: 100%; text-align: center; font-size: 20px;">Mời bạn click vào link <a href="http://localhost:3000/register/user/${id}">này</a> để kích hoạt tài khoản !</h3>
+        </div>
     </div>
     </div>
     `;
