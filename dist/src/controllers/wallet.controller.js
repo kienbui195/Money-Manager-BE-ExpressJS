@@ -38,13 +38,12 @@ class WalletController {
     createWallet(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const data = req.body;
-            let id = req.params.id;
             const wallet = new wallet_schema_1.WalletModel({
-                icon: req.body.icon,
-                name: req.body.name,
-                userId: id,
+                icon: data.icon,
+                name: data.name,
+                user_id: data.user_id,
                 // Lay id params
-                money: req.body.money
+                amount: data.amount
             });
             let allWallet = yield wallet_schema_1.WalletModel.findOne({ name: wallet.name });
             try {
