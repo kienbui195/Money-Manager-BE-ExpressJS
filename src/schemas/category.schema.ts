@@ -1,6 +1,6 @@
 import {Schema, model} from "mongoose";
 
-interface ICategory {
+export interface ICategory {
     icon: string;
     name: string,
 }
@@ -10,6 +10,6 @@ const categorySchema = new Schema<ICategory>({
     name: String,
 });
 
-const CategoryModel = model<ICategory>('Transaction', categorySchema);
+const CategoryModel = model<ICategory>('Category', categorySchema);
 
 export { CategoryModel };
