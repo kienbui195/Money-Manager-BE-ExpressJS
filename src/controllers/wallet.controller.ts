@@ -1,18 +1,7 @@
 import { Request, Response } from "express";
 import { UserModel } from "../schemas/user.model";
 import { WalletModel } from "../schemas/wallet.schema";
-import mongoose from "mongoose";
-import { TotalModel } from "../schemas/total.schema";
 class WalletController {
-
-    async getAllWallet(req: Request, res: Response) {
-        const wallet = await WalletModel.find({})
-        try {
-            res.status(200).json({ type: 'success', message: wallet })
-        } catch (err) {
-            res.status(500).json('Server')
-        }
-    }
 
     async getWalletByIdUser(req: Request, res: Response) {
         let id = req.params.id;
@@ -54,10 +43,12 @@ class WalletController {
     async updateWallet(req: Request, res: Response) {
         const wallet = req.body;
         let idWallet = req.params.id;
-        let walletFind = await WalletModel.findById(idWallet)
+        
+        let walletFind = await WalletModel.findOne({ _id: idWallet })
         try {
             if (walletFind) {
-                let newWallet = await WalletModel.findByIdAndUpdate({ _id: idWallet }, wallet)
+                await WalletModel.findOneAndUpdate({ _id: idWallet }, wallet)
+                const newWallet = await WalletModel.findOne({_id : idWallet})
                 res.status(200).json({ type: 'success', message: newWallet });
             } else {
                 res.status(200).json({ type: 'notexist', message: "Update wallet fail!!!" })
@@ -87,7 +78,7 @@ class WalletController {
         let id = req.params.id;
         const findWalletByUser = await WalletModel.find({user_id :  id })
         try {
-           const total =  findWalletByUser.reduce((total,item) => total = total +item.amount, 0 )
+           const total = findWalletByUser.reduce((total,item) => total = total +item.amount, 0 )
             res.status(200).json({ type: 'success', total })
         } catch (err) {
             res.status(500).json('Server error')
