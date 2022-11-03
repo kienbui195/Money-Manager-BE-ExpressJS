@@ -11,17 +11,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const wallet_schema_1 = require("../schemas/wallet.schema");
 class WalletController {
-    getAllWallet(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const wallet = yield wallet_schema_1.WalletModel.find({});
-            try {
-                res.status(200).json({ type: 'success', message: wallet });
-            }
-            catch (err) {
-                res.status(500).json('Server');
-            }
-        });
-    }
     getWalletByIdUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             let id = req.params.id;
@@ -68,10 +57,11 @@ class WalletController {
         return __awaiter(this, void 0, void 0, function* () {
             const wallet = req.body;
             let idWallet = req.params.id;
-            let walletFind = yield wallet_schema_1.WalletModel.findById(idWallet);
+            let walletFind = yield wallet_schema_1.WalletModel.findOne({ _id: idWallet });
             try {
                 if (walletFind) {
-                    let newWallet = yield wallet_schema_1.WalletModel.findByIdAndUpdate({ _id: idWallet }, wallet);
+                    yield wallet_schema_1.WalletModel.findOneAndUpdate({ _id: idWallet }, wallet);
+                    const newWallet = yield wallet_schema_1.WalletModel.findOne({ _id: idWallet });
                     res.status(200).json({ type: 'success', message: newWallet });
                 }
                 else {
@@ -85,7 +75,7 @@ class WalletController {
     }
     deleteWallet(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            let id = req.body.id;
+            let id = req.params.id;
             try {
                 let wallet = yield wallet_schema_1.WalletModel.findById(id);
                 if (!wallet) {

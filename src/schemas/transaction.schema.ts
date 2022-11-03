@@ -1,6 +1,4 @@
 import {Schema, model} from "mongoose";
-import {ICategory} from "./category.schema";
-import {IWallet} from "./wallet.schema";
 
 interface ITransaction {
     category: string,
