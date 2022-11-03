@@ -69,7 +69,7 @@ class WalletController {
     }
 
     async deleteWallet(req: Request, res: Response) {
-        let id = req.body.id
+        let id = req.params.id
         try {
             let wallet = await WalletModel.findById(id);
             if (!wallet) {
