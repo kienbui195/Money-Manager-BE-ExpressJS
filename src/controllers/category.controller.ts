@@ -14,7 +14,7 @@ class CategoryController {
 
     async getAllCategory(req: Request, res: Response) {
         try {
-            let userId = req.body.id;
+            let userId = req.params.id;
             let categoryUser = await CategoryModel.find({ user_id: userId})
             let categories = await CategoryModel.find({ user_id: ""})
             console.log(categories)
