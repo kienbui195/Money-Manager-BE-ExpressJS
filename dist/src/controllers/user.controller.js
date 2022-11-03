@@ -11,26 +11,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const user_model_1 = require("../schemas/user.model");
 class UserController {
-    getAllUser(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const user = yield user_model_1.UserModel.find();
-            try {
-                res.status(200).json({ type: 'success', message: user });
-            }
-            catch (err) {
-                res.status(200).json({ type: 'error', message: err });
-            }
-        });
-    }
     getUserById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const userId = req.params.id;
-            const user = yield user_model_1.UserModel.findById({ _id: userId }, req.body);
+            const user = yield user_model_1.UserModel.findOne({ _id: userId });
             try {
-                res.status(200).json({ type: 'success', message: user });
+                if (user) {
+                    res.status(200).json({ type: 'success', message: user });
+                }
+                else {
+                    res.status(200).json({ type: 'error', message: 'Something Wrong!' });
+                }
             }
             catch (err) {
-                res.status(200).json({ type: 'error', message: err });
+                res.status(500).json('Server error');
             }
         });
     }
