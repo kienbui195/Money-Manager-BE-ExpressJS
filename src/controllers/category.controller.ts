@@ -13,7 +13,8 @@ class CategoryController {
 
     async getAllCategory(req: Request, res: Response) {
         try {
-            let userId = req.body.id;
+            let userId = req.params.id;
+            console.log(userId)
             let categories = await CategoryModel.find({ userId: userId})
             res.status(200).json({type: 'success', message: 'get categories successfully!',data:categories});
         }catch (err) {
