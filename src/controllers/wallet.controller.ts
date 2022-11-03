@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { UserModel } from "../schemas/user.model";
 import { WalletModel } from "../schemas/wallet.schema";
+import mongoose from "mongoose";
 
 class WalletController {
 
@@ -13,14 +14,16 @@ class WalletController {
         }
     }
 
-    async getWalletById(req: Request, res: Response) {
-        let id = req.body.id
-        const wallet = await WalletModel.findById({ _id: id })
-        try {
-            res.status(200).json({ type: 'success', message: wallet })
-        } catch (err) {
-            res.status(500).json('Server error')
-        }
+    async getWalletByIdUser(req: Request, res: Response) {
+        let id = req.body.id;
+        
+        const wallet = await WalletModel.find({"userId": new mongoose.Types.ObjectId(id)})
+        console.log(wallet);
+        // try {
+        //     res.status(200).json({ type: 'success', message: wallet })
+        // } catch (err) {
+        //     res.status(500).json('Server error')
+        // }
     }
 
     async createWallet(req: Request, res: Response) {
@@ -69,7 +72,7 @@ class WalletController {
     }
 
     async deleteWallet(req: Request, res: Response) {
-        let id = req.params.id
+        let id = req.body.id
         try {
             let wallet = await WalletModel.findById(id);
             if (!wallet) {
