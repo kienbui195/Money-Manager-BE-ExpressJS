@@ -85,7 +85,7 @@ class WalletController {
     }
     deleteWallet(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            let id = req.body.id;
+            let id = req.params.id;
             try {
                 let wallet = yield wallet_schema_1.WalletModel.findById(id);
                 if (!wallet) {
