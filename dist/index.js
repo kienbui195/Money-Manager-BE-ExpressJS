@@ -11,6 +11,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const cors_1 = __importDefault(require("cors"));
 const wallet_route_1 = require("./src/routers/wallet.route");
 const transaction_route_1 = __importDefault(require("./src/routers/transaction.route"));
+const category_route_1 = __importDefault(require("./src/routers/category.route"));
 // dotenv.config();
 const port = process.env.PORT || 3001;
 const app = (0, express_1.default)();
@@ -26,6 +27,7 @@ app.use(express_1.default.urlencoded({ extended: false }));
 app.use('/auth', auth_route_1.default);
 app.use('/wallet', wallet_route_1.walletRoute);
 app.use('/transaction', transaction_route_1.default);
+app.use('/category', category_route_1.default);
 app.get('/*', (req, res) => {
     res.send(200).json({ type: 'error', message: '404 Not Found' });
 });

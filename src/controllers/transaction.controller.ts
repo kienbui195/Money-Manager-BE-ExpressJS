@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { TransactionModel } from "../schemas/transaction.schema";
 
+
 class TransactionController {
     async postAddTransaction(req: Request, res: Response) {
         const data = req.body;
@@ -33,8 +34,12 @@ class TransactionController {
 
         } catch (err) {
             res.status(500).json('Server error')
+
         }
     }
+
+
+
 }
 
 const transactionController = new TransactionController();
