@@ -5,7 +5,7 @@ export interface IWallet {
     icon : string
     name: string,
     user_id: IUser, 
-    amount: string,
+    amount: number,
 };
 
 const walletSchema = new Schema<IWallet>({
@@ -16,8 +16,8 @@ const walletSchema = new Schema<IWallet>({
         ref:'User'
     },
     amount: {
-        type: String,
-        default: "0"
+        type: Number,
+        default: 0
     },
 
 });
