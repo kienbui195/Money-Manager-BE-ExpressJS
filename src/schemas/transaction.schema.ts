@@ -2,16 +2,20 @@ import {Schema, model} from "mongoose";
 
 interface ITransaction {
     category: string,
-    amount: number,
+    amount: string,
     wallet_id: string,
-    user_email: string,
+    user_id: string,
+    note: string,
+    date: string
 }
 
 const transactionSchema = new Schema<ITransaction>({
     category: String,
-    amount:  Number,
+    amount:  String,
     wallet_id: String,
-    user_email: String
+    user_id: String,
+    note: String,
+    date: String
 });
 
 const TransactionModel = model<ITransaction>('Transaction', transactionSchema);
