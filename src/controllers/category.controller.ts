@@ -15,12 +15,11 @@ class CategoryController {
     async getAllCategory(req: Request, res: Response) {
         try {
             let userId = req.params.id;
-            let categoryUser = await CategoryModel.find({ user_id: userId})
+            let categoryOfUser = await CategoryModel.find({ user_id: userId})
             let categories = await CategoryModel.find({ user_id: ""})
-            console.log(categories)
-            console.log(categoryUser)
-            if(categoryUser || categories) {
-                res.status(200).json({type: 'success', message: 'get categories successfully!',categoryUser,categories});
+            if(categoryOfUser || categories) {
+                let categoryUser = categoryOfUser.concat(categories)
+                res.status(200).json({type: 'success', message: 'get categories successfully!',categoryUser});
             }
         }catch (err) {
             res.status(200).json({ type: 'error',message: err })
