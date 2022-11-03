@@ -25,13 +25,12 @@ class WalletController {
 
     async createWallet(req: Request, res: Response) {
         const data = req.body
-        let id = req.params.id
         const wallet = new WalletModel({
-            icon : req.body.icon,
-            name : req.body.name,
-            userId : id ,
+            icon : data.icon,
+            name : data.name,
+            user_id: data.user_id,
             // Lay id params
-            money : req.body.money
+            amount : data.amount
         })
         let allWallet = await WalletModel.findOne({ name: wallet.name })
         try {
