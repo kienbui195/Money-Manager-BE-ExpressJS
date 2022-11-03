@@ -9,7 +9,6 @@ interface ITransaction {
     wallet_id: string,
     user_id: string,
     note: string,
-    date: string
 }
 
 const transactionSchema = new Schema<ITransaction>({
@@ -22,8 +21,6 @@ const transactionSchema = new Schema<ITransaction>({
     wallet_id: String,
     user_id: String,
     note: String,
-    date: String
-
 });
 
 const TransactionModel = model<ITransaction>('Transaction', transactionSchema);
