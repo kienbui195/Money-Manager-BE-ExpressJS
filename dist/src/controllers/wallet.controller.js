@@ -14,7 +14,7 @@ const wallet_schema_1 = require("../schemas/wallet.schema");
 class WalletController {
     getAllWallet(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const wallet = yield wallet_schema_1.WalletModel.find();
+            const wallet = yield wallet_schema_1.WalletModel.find({});
             try {
                 res.status(200).json({ type: 'success', message: wallet });
             }
@@ -23,12 +23,13 @@ class WalletController {
             }
         });
     }
-    getWalletById(req, res) {
+    getWalletByIdUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            let id = req.body.id;
-            const wallet = yield wallet_schema_1.WalletModel.findById({ _id: id });
+            let id = req.params.id;
+            const wallet = yield wallet_schema_1.WalletModel.find({ user_id: id });
+            console.log(wallet);
             try {
-                res.status(200).json({ type: 'success', message: wallet });
+                res.status(200).json({ type: 'success', wallet });
             }
             catch (err) {
                 res.status(500).json('Server error');
@@ -38,13 +39,12 @@ class WalletController {
     createWallet(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const data = req.body;
-            let id = req.params.id;
             const wallet = new wallet_schema_1.WalletModel({
-                icon: req.body.icon,
-                name: req.body.name,
-                userId: id,
+                icon: data.icon,
+                name: data.name,
+                user_id: data.user_id,
                 // Lay id params
-                money: req.body.money
+                amount: data.amount
             });
             let allWallet = yield wallet_schema_1.WalletModel.findOne({ name: wallet.name });
             try {
@@ -87,7 +87,7 @@ class WalletController {
     }
     deleteWallet(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            let id = req.params.id;
+            let id = req.body.id;
             try {
                 let wallet = yield wallet_schema_1.WalletModel.findById(id);
                 if (!wallet) {

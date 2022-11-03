@@ -35,7 +35,7 @@ class AuthController {
         try {
             const data: any = req.body;
             const user = await UserModel.findOne({ email: data.email });
-            if (user) {
+            if (user && user.isVerify === true) {
                 if (data.password === user.password) {
                     let payload = {
                         user_id: user["id"],
