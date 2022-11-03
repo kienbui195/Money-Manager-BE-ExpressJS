@@ -1,4 +1,11 @@
-import { Router } from "express";
+import express from "express";
+import userController from "../controllers/user.controller"
 
-export const userRouter = Router()
+const userRoute = express.Router();
+
+userRoute.get('/info/:id', userController.getUserById)
+
+export default userRoute;
+
+
 
