@@ -7,7 +7,7 @@ import cors from 'cors';
 import  userRoute  from "./src/routers/user.route";
 import walletRoute from "./src/routers/wallet.route";
 import transactionRoute from "./src/routers/transaction.route";
-import categoryRoute from "./src/routers/category.route";
+import categoryRoute from "./src/routers/category.route"
 
 // dotenv.config();
 
