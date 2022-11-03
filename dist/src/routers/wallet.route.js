@@ -11,5 +11,5 @@ exports.walletRoute.get('/getAll', wallet_controller_1.default.getAllWallet);
 exports.walletRoute.get('/getId/:id', wallet_controller_1.default.getWalletById);
 exports.walletRoute.get('/total/:id', wallet_controller_1.default.getTotalMoney);
 exports.walletRoute.post('/create/:id', wallet_controller_1.default.createWallet);
-exports.walletRoute.post('/update/:id', wallet_controller_1.default.updateWallet);
+exports.walletRoute.put('/update/:id', wallet_controller_1.default.updateWallet);
 exports.walletRoute.delete('/delete/:id', wallet_controller_1.default.deleteWallet);
