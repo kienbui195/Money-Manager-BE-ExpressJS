@@ -15,11 +15,24 @@ class TransactionController {
 
     async getAllTransaction(req: Request, res: Response) {
         const userId = req.params.user_id
+        console.log(userId);
+
         const transactions = await TransactionModel.find({ user_id: userId })
         try {
-            
+            console.log(transactions)
+            if (transactions.length > 0) {
+                res.status(200).json({
+                    type: 'success', data: {
+                        message: 'Get Data Success!',
+                        data: transactions
+                    }
+                })
+            } else {
+                res.status(200).json({ type: 'notexist', message: 'Not Exist!' })
+            }
+
         } catch (err) {
-            
+            res.status(500).json('Server error')
         }
     }
 }
