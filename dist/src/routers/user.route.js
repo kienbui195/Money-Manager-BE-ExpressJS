@@ -7,4 +7,5 @@ const express_1 = __importDefault(require("express"));
 const user_controller_1 = __importDefault(require("../controllers/user.controller"));
 const userRoute = express_1.default.Router();
 userRoute.get('/info/:id', user_controller_1.default.getUserById);
+userRoute.put('/edit-username/:id', user_controller_1.default.updateUsername);
 exports.default = userRoute;

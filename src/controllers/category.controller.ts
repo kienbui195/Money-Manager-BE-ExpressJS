@@ -17,8 +17,6 @@ class CategoryController {
             let userId = req.params.id;
             let categoryUser = await CategoryModel.find({ user_id: userId})
             let categories = await CategoryModel.find({ user_id: ""})
-            console.log(categories)
-            console.log(categoryUser)
             if(categoryUser || categories) {
                 res.status(200).json({type: 'success', message: 'get categories successfully!',categoryUser,categories});
             }

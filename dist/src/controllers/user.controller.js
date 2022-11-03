@@ -28,30 +28,22 @@ class UserController {
             }
         });
     }
-    updateUser(req, res) {
+    updateUsername(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(req.body);
-            let id = req.params.id;
-            let publisher = yield user_model_1.UserModel.findById(id);
-            if (!publisher) {
-                let data = req.body;
-                let newUser = yield user_model_1.UserModel.findByIdAndUpdate({ _id: id }, data);
-                res.status(200).json({ type: 'success', message: newUser });
+            const id = req.params.id;
+            let user = yield user_model_1.UserModel.findOne({ _id: id });
+            try {
+                if (user) {
+                    yield user_model_1.UserModel.findOneAndUpdate({ _id: id }, { username: req.body.username });
+                    res.status(200).json({ type: 'success', message: 'Update success!' });
+                }
+                else {
+                    res.status(200).json({ type: 'notexist', message: "Update user fail!!!" });
+                }
             }
-            else {
-                res.status(200).json({ type: 'notexist', message: "Update user fail!!!" });
+            catch (err) {
+                res.status(500).json('Server error');
             }
-        });
-    }
-    deleteUser(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let id = req.params.id;
-            let user = yield user_model_1.UserModel.findById(id);
-            if (!user) {
-                res.status(200).json({ type: 'notexist', message: "No User Delete" });
-            }
-            user === null || user === void 0 ? void 0 : user.delete();
-            res.status(200).json({ type: 'success', message: 'Delete successfully!' });
         });
     }
 }
