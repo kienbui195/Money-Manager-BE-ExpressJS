@@ -3,25 +3,19 @@ import {ICategory} from "./category.schema";
 import {IWallet} from "./wallet.schema";
 
 interface ITransaction {
-    category: ICategory,
+    category: string,
     date: string,
     amount: number,
-    wallet: IWallet,
+    wallet: string,
     note: string,
     userId : string
 }
 
 const transactionSchema = new Schema<ITransaction>({
-    category: {
-        type : Schema.Types.ObjectId,
-        ref:'Category'
-    },
+    category: String,
     date: String,
     amount:  Number,
-    wallet: {
-        type : Schema.Types.ObjectId,
-        ref:'Wallet'
-    },
+    wallet: String,
     note: String,
     userId : String,
 });
