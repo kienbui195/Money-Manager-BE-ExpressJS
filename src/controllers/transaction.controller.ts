@@ -17,7 +17,7 @@ class TransactionController {
     async getAllTransaction(req: Request, res: Response) {
         const userId = req.params.user_id
         console.log(userId);
-
+        
         const transactions = await TransactionModel.find({ user_id: userId })
         try {
             console.log(transactions)
