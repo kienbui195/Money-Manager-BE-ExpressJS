@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { UserModel } from "../schemas/user.model";
 import { WalletModel } from "../schemas/wallet.schema";
 import mongoose from "mongoose";
-
+import { TotalModel } from "../schemas/total.schema";
 class WalletController {
 
     async getAllWallet(req: Request, res: Response) {
@@ -17,7 +17,6 @@ class WalletController {
     async getWalletByIdUser(req: Request, res: Response) {
         let id = req.params.id;
         const wallet = await WalletModel.find({user_id :  id })
-        console.log(wallet);
         try {
             res.status(200).json({ type: 'success', wallet })
         } catch (err) {
@@ -81,21 +80,18 @@ class WalletController {
             }
         } catch (err) {
             res.status(500).json('Server error')
-        }
-         
+        }  
     }
 
     async getTotalMoney (req: Request, res: Response) {
-        let id = req.params.id
-         await UserModel.findById(id).populate('wallet_id', 'amount').exec((err, data) => {
-            if (err) {
-                res.status(401).json({ message: `Không có kết quả tìm kiếm` })
-                console.log(err);
-            }
-            console.log(data);
-            res.status(200).json(data)
-        })
+        let id = req.params.id;
+        const findWalletByUser = await WalletModel.find({user_id :  id })
+        try {
+           const total =  findWalletByUser.reduce((total,item) => total = total +item.amount, 0 )
+            res.status(200).json({ type: 'success', total })
+        } catch (err) {
+            res.status(500).json('Server error')
+        }
     }
 }
-
 export default new WalletController()

@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const user_model_1 = require("../schemas/user.model");
 const wallet_schema_1 = require("../schemas/wallet.schema");
 class WalletController {
     getAllWallet(req, res) {
@@ -27,7 +26,6 @@ class WalletController {
         return __awaiter(this, void 0, void 0, function* () {
             let id = req.params.id;
             const wallet = yield wallet_schema_1.WalletModel.find({ user_id: id });
-            console.log(wallet);
             try {
                 res.status(200).json({ type: 'success', wallet });
             }
@@ -106,14 +104,14 @@ class WalletController {
     getTotalMoney(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             let id = req.params.id;
-            yield user_model_1.UserModel.findById(id).populate('wallet_id', 'amount').exec((err, data) => {
-                if (err) {
-                    res.status(401).json({ message: `Không có kết quả tìm kiếm` });
-                    console.log(err);
-                }
-                console.log(data);
-                res.status(200).json(data);
-            });
+            const findWalletByUser = yield wallet_schema_1.WalletModel.find({ user_id: id });
+            try {
+                const total = findWalletByUser.reduce((total, item) => total = total + item.amount, 0);
+                res.status(200).json({ type: 'success', total });
+            }
+            catch (err) {
+                res.status(500).json('Server error');
+            }
         });
     }
 }
