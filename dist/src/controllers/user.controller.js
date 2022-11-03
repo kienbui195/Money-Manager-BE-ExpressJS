@@ -46,5 +46,29 @@ class UserController {
             }
         });
     }
+    changePassword(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user_id = req.params.id;
+            const data = req.body;
+            const user = yield user_model_1.UserModel.findOne({ _id: user_id });
+            try {
+                if (user) {
+                    if (data.old_pass == user.password) {
+                        yield user_model_1.UserModel.findOneAndUpdate({ _id: user_id }, { password: data.new_pass });
+                        res.status(200).json({ type: 'success', message: 'Change password success!' });
+                    }
+                    else {
+                        res.status(200).json({ type: 'error', message: 'Wrong old password! ' });
+                    }
+                }
+                else {
+                    res.status(200).json({ type: 'notexist', message: 'Not exist user!' });
+                }
+            }
+            catch (err) {
+                res.status(500).json('Server error');
+            }
+        });
+    }
 }
 exports.default = new UserController();
