@@ -1,14 +1,24 @@
 import { Request, Response } from 'express';
 import { TransactionModel } from "../schemas/transaction.schema";
+import {WalletModel} from "../schemas/wallet.schema";
 
 
 class TransactionController {
     async postAddTransaction(req: Request, res: Response) {
-        const data = req.body;
-        try {
-            await TransactionModel.create(data);
-            res.status(200).json({ type: 'success', message: 'Added transaction successfully!' });
+        const walletId = req.body.wallet_id;
+        const categoryId = req.body.category_id;
+        const walletUser = await WalletModel.findById({_id: walletId});
+        const category = await WalletModel.findById({_id: categoryId});
+        const transaction = {
 
+        };
+        try {
+            if(walletId) {
+                await TransactionModel.create(transaction);
+                res.status(200).json({ type: 'success', message: 'Added transaction successfully!' });
+            }else {
+                res.status(200).json({ type: 'error', message: 'Please Create Wallet!' })
+            }
         } catch (err) {
             res.status(500).json('Server error');
         }
