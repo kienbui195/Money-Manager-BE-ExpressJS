@@ -8,6 +8,7 @@ interface ITransaction {
     amount: number,
     wallet: IWallet,
     note: string,
+    userId : string
 }
 
 const transactionSchema = new Schema<ITransaction>({
@@ -22,6 +23,7 @@ const transactionSchema = new Schema<ITransaction>({
         ref:'Wallet'
     },
     note: String,
+    userId : String,
 });
 
 const TransactionModel = model<ITransaction>('Transaction', transactionSchema);
