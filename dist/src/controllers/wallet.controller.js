@@ -8,17 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const user_model_1 = require("../schemas/user.model");
 const wallet_schema_1 = require("../schemas/wallet.schema");
-const mongoose_1 = __importDefault(require("mongoose"));
 class WalletController {
     getAllWallet(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const wallet = yield wallet_schema_1.WalletModel.find();
+            const wallet = yield wallet_schema_1.WalletModel.find({});
             try {
                 res.status(200).json({ type: 'success', message: wallet });
             }
@@ -29,26 +25,26 @@ class WalletController {
     }
     getWalletByIdUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            let id = req.body.id;
-            const wallet = yield wallet_schema_1.WalletModel.find({ "userId": new mongoose_1.default.Types.ObjectId(id) });
+            let id = req.params.id;
+            const wallet = yield wallet_schema_1.WalletModel.find({ user_id: id });
             console.log(wallet);
-            // try {
-            //     res.status(200).json({ type: 'success', message: wallet })
-            // } catch (err) {
-            //     res.status(500).json('Server error')
-            // }
+            try {
+                res.status(200).json({ type: 'success', wallet });
+            }
+            catch (err) {
+                res.status(500).json('Server error');
+            }
         });
     }
     createWallet(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const data = req.body;
-            let id = req.params.id;
             const wallet = new wallet_schema_1.WalletModel({
-                icon: req.body.icon,
-                name: req.body.name,
-                userId: id,
+                icon: data.icon,
+                name: data.name,
+                user_id: data.user_id,
                 // Lay id params
-                money: req.body.money
+                amount: data.amount
             });
             let allWallet = yield wallet_schema_1.WalletModel.findOne({ name: wallet.name });
             try {

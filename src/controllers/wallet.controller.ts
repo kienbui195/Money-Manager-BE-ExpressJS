@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 class WalletController {
 
     async getAllWallet(req: Request, res: Response) {
-        const wallet = await WalletModel.find()
+        const wallet = await WalletModel.find({})
         try {
             res.status(200).json({ type: 'success', message: wallet })
         } catch (err) {
@@ -15,26 +15,24 @@ class WalletController {
     }
 
     async getWalletByIdUser(req: Request, res: Response) {
-        let id = req.body.id;
-        
-        const wallet = await WalletModel.find({"userId": new mongoose.Types.ObjectId(id)})
+        let id = req.params.id;
+        const wallet = await WalletModel.find({user_id :  id })
         console.log(wallet);
-        // try {
-        //     res.status(200).json({ type: 'success', message: wallet })
-        // } catch (err) {
-        //     res.status(500).json('Server error')
-        // }
+        try {
+            res.status(200).json({ type: 'success', wallet })
+        } catch (err) {
+            res.status(500).json('Server error')
+        }
     }
 
     async createWallet(req: Request, res: Response) {
         const data = req.body
-        let id = req.params.id
         const wallet = new WalletModel({
-            icon : req.body.icon,
-            name : req.body.name,
-            userId : id ,
+            icon : data.icon,
+            name : data.name,
+            user_id: data.user_id,
             // Lay id params
-            money : req.body.money
+            amount : data.amount
         })
         let allWallet = await WalletModel.findOne({ name: wallet.name })
         try {
