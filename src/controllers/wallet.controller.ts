@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
 import { UserModel } from "../schemas/user.model";
 import { WalletModel } from "../schemas/wallet.schema";
-import mongoose from "mongoose";
-import { TotalModel } from "../schemas/total.schema";
 class WalletController {
 
     async getWalletByIdUser(req: Request, res: Response) {
@@ -80,7 +78,7 @@ class WalletController {
         let id = req.params.id;
         const findWalletByUser = await WalletModel.find({user_id :  id })
         try {
-           const total =  findWalletByUser.reduce((total,item) => total = total +item.amount, 0 )
+           const total = findWalletByUser.reduce((total,item) => total = total +item.amount, 0 )
             res.status(200).json({ type: 'success', total })
         } catch (err) {
             res.status(500).json('Server error')
