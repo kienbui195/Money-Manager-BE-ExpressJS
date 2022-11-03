@@ -5,15 +5,6 @@ import mongoose from "mongoose";
 
 class WalletController {
 
-    async getAllWallet(req: Request, res: Response) {
-        const wallet = await WalletModel.find({})
-        try {
-            res.status(200).json({ type: 'success', message: wallet })
-        } catch (err) {
-            res.status(500).json('Server')
-        }
-    }
-
     async getWalletByIdUser(req: Request, res: Response) {
         let id = req.params.id;
         const wallet = await WalletModel.find({user_id :  id })
@@ -55,10 +46,12 @@ class WalletController {
     async updateWallet(req: Request, res: Response) {
         const wallet = req.body;
         let idWallet = req.params.id;
-        let walletFind = await WalletModel.findById(idWallet)
+        
+        let walletFind = await WalletModel.findOne({ _id: idWallet })
         try {
             if (walletFind) {
-                let newWallet = await WalletModel.findByIdAndUpdate({ _id: idWallet }, wallet)
+                await WalletModel.findOneAndUpdate({ _id: idWallet }, wallet)
+                const newWallet = await WalletModel.findOne({_id : idWallet})
                 res.status(200).json({ type: 'success', message: newWallet });
             } else {
                 res.status(200).json({ type: 'notexist', message: "Update wallet fail!!!" })
@@ -70,7 +63,7 @@ class WalletController {
     }
 
     async deleteWallet(req: Request, res: Response) {
-        let id = req.body.id
+        let id = req.params.id
         try {
             let wallet = await WalletModel.findById(id);
             if (!wallet) {
