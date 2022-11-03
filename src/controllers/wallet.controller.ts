@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
 import { UserModel } from "../schemas/user.model";
 import { WalletModel } from "../schemas/wallet.schema";
+import mongoose from "mongoose";
 
 class WalletController {
 
     async getAllWallet(req: Request, res: Response) {
-        const wallet = await WalletModel.find()
+        const wallet = await WalletModel.find({})
         try {
             res.status(200).json({ type: 'success', message: wallet })
         } catch (err) {
@@ -13,11 +14,12 @@ class WalletController {
         }
     }
 
-    async getWalletById(req: Request, res: Response) {
-        let id = req.body.id
-        const wallet = await WalletModel.findById({ _id: id })
+    async getWalletByIdUser(req: Request, res: Response) {
+        let id = req.params.id;
+        const wallet = await WalletModel.find({user_id :  id })
+        console.log(wallet);
         try {
-            res.status(200).json({ type: 'success', message: wallet })
+            res.status(200).json({ type: 'success', wallet })
         } catch (err) {
             res.status(500).json('Server error')
         }
@@ -25,13 +27,12 @@ class WalletController {
 
     async createWallet(req: Request, res: Response) {
         const data = req.body
-        let id = req.params.id
         const wallet = new WalletModel({
-            icon : req.body.icon,
-            name : req.body.name,
-            userId : id ,
+            icon : data.icon,
+            name : data.name,
+            user_id: data.user_id,
             // Lay id params
-            money : req.body.money
+            amount : data.amount
         })
         let allWallet = await WalletModel.findOne({ name: wallet.name })
         try {
@@ -69,7 +70,7 @@ class WalletController {
     }
 
     async deleteWallet(req: Request, res: Response) {
-        let id = req.params.id
+        let id = req.body.id
         try {
             let wallet = await WalletModel.findById(id);
             if (!wallet) {

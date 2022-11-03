@@ -6,9 +6,10 @@ interface ITransaction {
     category: ICategory,
     date: string,
     amount: number,
-    wallet: IWallet,
+    wallet_id: string,
+    user_id: string,
     note: string,
-    userId : string
+    date: string
 }
 
 const transactionSchema = new Schema<ITransaction>({
@@ -18,12 +19,11 @@ const transactionSchema = new Schema<ITransaction>({
     },
     date: String,
     amount:  Number,
-    wallet: {
-        type : Schema.Types.ObjectId,
-        ref:'Wallet'
-    },
+    wallet_id: String,
+    user_id: String,
     note: String,
-    userId : String,
+    date: String
+
 });
 
 const TransactionModel = model<ITransaction>('Transaction', transactionSchema);
