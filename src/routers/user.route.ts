@@ -3,7 +3,9 @@ import userController from "../controllers/user.controller"
 
 const userRoute = express.Router();
 
-userRoute.get('/info/:id', userController.getUserById)
+userRoute.get('/info/:id', userController.getUserById);
+userRoute.put('/edit-username/:id', userController.updateUsername);
+userRoute.put('/change-password/:id', userController.changePassword);
 
 export default userRoute;
 
