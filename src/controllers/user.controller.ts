@@ -3,14 +3,14 @@ import { UserModel } from "../schemas/user.model";
 
 class UserController {
 
-    async getUserById (req: Request, res: Response) {
+    async getUserById(req: Request, res: Response) {
         const userId = req.params.id
         const user = await UserModel.findOne({ _id: userId })
         try {
             if (user) {
-                res.status(200).json({type: 'success', message: user})
+                res.status(200).json({ type: 'success', message: user })
             } else {
-                res.status(200).json({type: 'error', message: 'Something Wrong!'})
+                res.status(200).json({ type: 'error', message: 'Something Wrong!' })
             }
         } catch (err) {
             res.status(500).json('Server error')
@@ -18,34 +18,41 @@ class UserController {
     }
 
 
-    async updateUser (req: Request, res: Response) {
-
-        console.log(req.body)
-        let id = req.params.id;
-        let publisher = await UserModel.findById(id);
-        if (!publisher) {
-            let data = req.body;
-            let newUser = await UserModel.findByIdAndUpdate({ _id: id }, data);
-            res.status(200).json({type: 'success', message: newUser});
-        }
-        else {
-       
-            res.status(200).json({type: 'notexist', message: "Update user fail!!!" })
-
+    async updateUsername(req: Request, res: Response) {
+        const id = req.params.id;
+        let user = await UserModel.findOne({ _id: id });
+        try {
+            if (user) {
+                await UserModel.findOneAndUpdate({ _id: id }, {username: req.body.username});
+                res.status(200).json({ type: 'success', message: 'Update success!' });
+            }
+            else {
+                res.status(200).json({ type: 'notexist', message: "Update user fail!!!" })
+            }
+        } catch (err) {
+            res.status(500).json('Server error')
         }
     }
 
-
-    async deleteUser (req: Request, res: Response) {
-        let id = req.params.id
-        let user = await UserModel.findById(id);
-        if (!user) {
-            res.status(200).json({type:'notexist', message: "No User Delete" });
+    async changePassword(req: Request, res: Response) {
+        const user_id = req.params.id;
+        const data = req.body
+        const user = await UserModel.findOne({ _id: user_id })
+        try {
+            if (user) {
+                if (data.old_pass == user.password) {
+                    await UserModel.findOneAndUpdate({ _id: user_id }, { password: data.new_pass })
+                    res.status(200).json({type:'success', message: 'Change password success!'})
+                } else {
+                    res.status(200).json({type:'error', message: 'Wrong old password! '})
+                }
+            } else {
+                res.status(200).json({type: 'notexist', message: 'Not exist user!'})
+            }
+        } catch (err) {
+            res.status(500).json('Server error')
         }
-        user?.delete();
-        res.status(200).json({type: 'success', message: 'Delete successfully!'});
     }
-    
 }
 
 export default new UserController()
