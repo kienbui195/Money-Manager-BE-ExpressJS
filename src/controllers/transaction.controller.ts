@@ -88,7 +88,7 @@ class TransactionController {
                         wallet_id: walletId,
                         wallet_name : walletUser.name,
                         wallet_icon : walletUser.icon,
-                        user_id:  req.body.user_id,
+                        user_id:  transaction.user_id,
                         note: req.body.note,
                         beforeAmount:beforeAmount,
                         afterAmount:afterAmount,
@@ -100,6 +100,21 @@ class TransactionController {
                 res.status(200).json({ type: 'error', message: 'Update Error!' })
             }
         } catch (err) {
+            res.status(500).json('Server error');
+        }
+    }
+
+    async deleteTransaction(req: Request, res: Response) {
+        try {
+            const id = req.params.id;
+            const transaction = await TransactionModel.findOne({_id:id})
+            if (transaction) {
+                await TransactionModel.deleteOne({_id:id})
+                res.status(200).json({ type: 'success', message: 'Delete transaction successfully!' });
+            }else {
+                res.status(200).json({ type: 'error', message: 'Delete Error!' })
+            }
+        }catch (err) {
             res.status(500).json('Server error');
         }
     }
