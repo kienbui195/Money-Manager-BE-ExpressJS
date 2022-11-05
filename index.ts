@@ -1,12 +1,13 @@
 import express, { Express, Request, Response } from "express";
 // import dotenv from "dotenv";
 import bodyParser from "body-parser";
-import authRouter from "./src/routers/auth.route";
-import passport from "passport";
+import authRoute from "./src/routers/auth.route";
 import mongoose from "mongoose";
 import cors from 'cors';
-import { userRouter } from "./src/routers/user.route";
-import walletRouter from './src/routers/wallet.route';
+import  userRoute  from "./src/routers/user.route";
+import walletRoute from "./src/routers/wallet.route";
+import transactionRoute from "./src/routers/transaction.route";
+import categoryRoute from "./src/routers/category.route"
 
 // dotenv.config();
 
@@ -24,8 +25,11 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded({ extended: false }));
 
-app.use('/auth', authRouter);
-app.use('/wallet', walletRouter);
+app.use('/auth', authRoute);
+app.use('/wallet', walletRoute);
+app.use('/transaction', transactionRoute);
+app.use('/category', categoryRoute);
+app.use('/user', userRoute)
 
 app.get('/*', (req, res) => {
     res.send(200).json({ type: 'error', message: '404 Not Found' });

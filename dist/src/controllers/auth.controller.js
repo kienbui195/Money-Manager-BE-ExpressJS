@@ -12,12 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.SECRET_KEY = void 0;
 const { UserModel } = require('../schemas/user.model');
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const mail_setup_1 = __importDefault(require("../tools/Verify Email/mail.setup"));
+exports.SECRET_KEY = '190896';
 class AuthController {
-    constructor() {
-        this.register = (req, res) => __awaiter(this, void 0, void 0, function* () {
+    register(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
             try {
                 let user = req.body;
                 let userId = yield UserModel.findOne({ email: req.body.email });
@@ -39,46 +41,26 @@ class AuthController {
                 res.status(500).json('Server error');
             }
         });
-        this.verifyUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
-            try {
-                let id = req.params.id;
-                const user = yield UserModel.findOne({ _id: id });
-                if (!user) {
-                    res.status(200).json({ type: 'notexist', message: 'Verify Fail' });
-                }
-                else {
-                    yield UserModel.findOneAndUpdate({ _id: id }, { isVerify: true });
-                    res.status(200).json({ type: 'success', message: 'Verify Success' });
-                }
-            }
-            catch (error) {
-                res.status(500).json('Server error');
-            }
-        });
     }
     postLogin(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const data = req.body;
                 const user = yield UserModel.findOne({ email: data.email });
-                if (user) {
+                if (user && user.isVerify === true) {
                     if (data.password === user.password) {
                         let payload = {
                             user_id: user["id"],
-                            email: user["email"]
                         };
                         const token = jsonwebtoken_1.default.sign(payload, '230193', {
                             expiresIn: 36000,
                         });
                         res.status(200)
-                            .cookie('jwt_token', JSON.stringify(token), {
-                            httpOnly: true,
-                            maxAge: 1 * 15 * 1 * 1
-                        })
                             .json({
-                            type: 'success', message: {
+                            type: 'success', data: {
                                 message: 'Signed in successfully!',
-                                data: user
+                                data: user,
+                                token: token
                             }
                         });
                     }
@@ -90,6 +72,110 @@ class AuthController {
                     res.status(200).json({
                         type: 'error',
                         message: 'Account does not exist yet!',
+                    });
+                }
+            }
+            catch (err) {
+                res.status(500).json('Server error');
+            }
+        });
+    }
+    verifyUser(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let id = req.params.id;
+            try {
+                let idUser = yield UserModel.findByIdAndUpdate({ _id: id }, { isVerify: true });
+                if (idUser) {
+                    res.status(200).json({ type: 'success', message: "Verify successfully" });
+                }
+                else {
+                    yield UserModel.findOneAndUpdate({ _id: id }, { isVerify: true });
+                    res.status(200).json({ type: 'success', message: 'Verify Success' });
+                }
+            }
+            catch (error) {
+                res.status(500).json('Server error');
+            }
+        });
+    }
+    isLogin(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = yield UserModel.findOne({ _id: req.body.id });
+            try {
+                let token = req.body["token"];
+                if (token) {
+                    jsonwebtoken_1.default.verify(token, '230193', (err, decoded) => {
+                        if (err) {
+                            return res.status(200).json({ type: 'No', message: 'Unauthorized' });
+                        }
+                        else {
+                            req.decoded = decoded;
+                            res.status(200).json({
+                                type: 'Yes',
+                                message: 'User is Login',
+                                data: user.username
+                            });
+                        }
+                    });
+                }
+                else {
+                    return res.status(200).json({
+                        type: 'error',
+                        message: 'No token provided'
+                    });
+                }
+            }
+            catch (err) {
+                res.status(500).json({
+                    message: 'Server error'
+                });
+            }
+        });
+    }
+    loginWithGoogle(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const data = req.body;
+            const user = yield UserModel.findOne({ email: data.email });
+            try {
+                if (user) {
+                    yield UserModel.findOneAndUpdate({ email: data.email }, {
+                        google_id: data.google_id,
+                        isVerify: true,
+                        username: data.username
+                    });
+                    let payload = {
+                        user_id: user["id"]
+                    };
+                    const token = jsonwebtoken_1.default.sign(payload, '230193', { expiresIn: 36000 });
+                    res.status(200)
+                        .json({
+                        type: 'success', data: {
+                            message: 'Signed in successfully!',
+                            data: user,
+                            token: token
+                        }
+                    });
+                }
+                else {
+                    let newUser = new UserModel({
+                        username: data.username,
+                        google_id: data.google_id,
+                        isVerify: true,
+                        email: data.email,
+                        password: '',
+                    });
+                    yield newUser.save();
+                    let payload = {
+                        user_id: newUser["id"]
+                    };
+                    const token = jsonwebtoken_1.default.sign(payload, '230193', { expiresIn: 36000 });
+                    res.status(200)
+                        .json({
+                        type: 'success', data: {
+                            message: 'Signed in successfully!',
+                            data: newUser,
+                            token: token
+                        }
                     });
                 }
             }

@@ -1,6 +1,14 @@
-import { Router } from "express";
-import UserController from "../controllers/user.controller";
-import verifyByEmail from "../tools/Verify Email/mail.setup";
+import express from "express";
+import userController from "../controllers/user.controller"
 
-export const userRouter = Router()
+const userRoute = express.Router();
+
+userRoute.get('/info/:id', userController.getUserById);
+userRoute.put('/edit-username/:id', userController.updateUsername);
+userRoute.put('/change-password/:id', userController.changePassword);
+userRoute.get('/profile/:id', userController.getProfile)
+
+export default userRoute;
+
+
 
