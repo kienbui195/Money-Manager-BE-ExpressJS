@@ -20,6 +20,7 @@ class TransactionController {
                     category_id: categoryId,
                     category_name: category.name,
                     category_icon: category.icon,
+                    category_type: category.type,
                     date: req.body.date,
                     amount: req.body.amount,
                     wallet_id: walletId,
