@@ -1,15 +1,17 @@
 import {Schema, model} from "mongoose";
 
 export interface ICategory {
-    user_id: string;
-    icon: string;
+    user_id: string,
+    icon: string,
     name: string,
+    type: number
 }
 
 const categorySchema = new Schema<ICategory>({
     user_id : String,
     icon: String,
     name: String,
+    type: Number
 });
 
 const CategoryModel = model<ICategory>('Category', categorySchema);
