@@ -44,8 +44,13 @@ class UserController {
         try {
             if (user) {
                 if (data.old_pass == user.password) {
-                    await UserModel.findOneAndUpdate({ _id: user_id }, { password: data.new_pass })
-                    res.status(200).json({ type: 'success', message: 'Change password success!' })
+                    if (data.old_pass == data.new_pass) {
+                        res.status(200).json({type : 'success', message: 'Your password has not changed!'})
+                    } else {
+                        await UserModel.findOneAndUpdate({ _id: user_id }, { password: data.new_pass })
+                        res.status(200).json({ type: 'success', message: 'Change password success!' })
+                    }
+                    
                 } else {
                     res.status(200).json({ type: 'error', message: 'Wrong old password! ' })
                 }
