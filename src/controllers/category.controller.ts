@@ -17,7 +17,7 @@ class CategoryController {
             let userId = req.params.id;
             let categoryOfUser = await CategoryModel.find({ user_id: userId})
             let categories = await CategoryModel.find({ user_id: ""})
-            if(categoryOfUser || categories) {
+            if(categoryOfUser.length > 0 || categories.length > 0) {
                 let categoryUser = categoryOfUser.concat(categories)
                 res.status(200).json({type: 'success', message: 'get categories successfully!',categoryUser});
             }

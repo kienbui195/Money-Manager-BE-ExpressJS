@@ -9,4 +9,5 @@ const userRoute = express_1.default.Router();
 userRoute.get('/info/:id', user_controller_1.default.getUserById);
 userRoute.put('/edit-username/:id', user_controller_1.default.updateUsername);
 userRoute.put('/change-password/:id', user_controller_1.default.changePassword);
+userRoute.get('/profile/:id', user_controller_1.default.getProfile);
 exports.default = userRoute;

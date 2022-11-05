@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
+import { CategoryModel } from "../schemas/category.schema";
+import { TransactionModel } from "../schemas/transaction.schema";
 import { UserModel } from "../schemas/user.model";
+import { WalletModel } from "../schemas/wallet.schema";
 
 class UserController {
 
@@ -23,7 +26,7 @@ class UserController {
         let user = await UserModel.findOne({ _id: id });
         try {
             if (user) {
-                await UserModel.findOneAndUpdate({ _id: id }, {username: req.body.username});
+                await UserModel.findOneAndUpdate({ _id: id }, { username: req.body.username });
                 res.status(200).json({ type: 'success', message: 'Update success!' });
             }
             else {
@@ -41,17 +44,42 @@ class UserController {
         try {
             if (user) {
                 if (data.old_pass == user.password) {
-                    await UserModel.findOneAndUpdate({ _id: user_id }, { password: data.new_pass })
-                    res.status(200).json({type:'success', message: 'Change password success!'})
+                    if (data.old_pass == data.new_pass) {
+                        res.status(200).json({type : 'warning', message: 'Your password has not changed!'})
+                    } else {
+                        await UserModel.findOneAndUpdate({ _id: user_id }, { password: data.new_pass })
+                        res.status(200).json({ type: 'success', message: 'Change password success!' })
+                    }
+                    
                 } else {
-                    res.status(200).json({type:'error', message: 'Wrong old password! '})
+                    res.status(200).json({ type: 'error', message: 'Wrong old password! ' })
                 }
             } else {
-                res.status(200).json({type: 'notexist', message: 'Not exist user!'})
+                res.status(200).json({ type: 'notexist', message: 'Not exist user!' })
             }
         } catch (err) {
             res.status(500).json('Server error')
         }
+    }
+
+    async getProfile(req: Request, res: Response) {
+        const userID = req.params.id;
+        const wallets = await WalletModel.find({ user_id: userID });
+        const transactions = await TransactionModel.find({ user_id: userID });
+        const categorys = await CategoryModel.find({ user_id: userID });
+        try {
+            res.status(200).json({
+                type: 'success',
+                data: {
+                    wallets: wallets.length,
+                    transactions: transactions.length,
+                    categorys: categorys.length
+                }
+            })
+        } catch (err) {
+            res.status(500).json('Server error')
+        }
+
     }
 }
 
