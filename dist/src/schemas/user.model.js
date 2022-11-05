@@ -4,6 +4,7 @@ exports.UserModel = void 0;
 const mongoose_1 = require("mongoose");
 ;
 const userSchema = new mongoose_1.Schema({
+    img: String,
     username: String,
     email: String,
     password: String,
@@ -12,10 +13,7 @@ const userSchema = new mongoose_1.Schema({
         default: false
     },
     google_id: String,
-    wallet_id: {
-        type: mongoose_1.Schema.Types.ObjectId,
-        ref: 'Wallet'
-    },
+    wallet_id: String,
 });
 const UserModel = (0, mongoose_1.model)('User', userSchema);
 exports.UserModel = UserModel;
