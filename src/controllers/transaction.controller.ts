@@ -3,6 +3,7 @@ import { TransactionModel } from "../schemas/transaction.schema";
 import { WalletModel } from "../schemas/wallet.schema";
 import { CategoryModel } from "../schemas/category.schema";
 import dayjs from 'dayjs';
+import sortDecrease from './../tools/sortArray/sortDecrease';
 
 dayjs().format()
 class TransactionController {
@@ -123,13 +124,14 @@ class TransactionController {
 
     async getTransactionsInfoThisMonth(req: Request, res: Response) {
         dayjs().format()
-        const now = dayjs()
-        const month = now.format('DD/MM/YYYY').slice(3, 9)
+        let now = dayjs()
+        let month = now.format('DD/MM/YYYY').slice(3, 9)
         const userID = req.params.id;
+        let transactions = await TransactionModel.find({ user_id: userID })
+
         try {
-            const transactions = await TransactionModel.find({ user_id: userID })
             if (transactions.length > 0) {
-                let list: any = []
+                let list: any[] = []
                 transactions.forEach((item) => {
                     if (item.date.slice(3, 9) === month) {
                         list.push(item)
@@ -137,7 +139,10 @@ class TransactionController {
                 })
                 let inflow: number = 0
                 let outflow: number = 0
-                list.forEach((item: any) => {
+                
+                let newList = list.reverse()
+
+                newList.forEach((item: any) => {
                     if (item.category_type === 'income') {
                         inflow += item.amount
                     }
@@ -145,20 +150,6 @@ class TransactionController {
                         outflow += item.amount
                     }
                 });
-
-                const sortList = (arr: any[]) => {
-                    for (let i = 0; i < arr.length; i++) {
-                        for (let j = 0; j < (arr.length - i - 1); j++) {
-                            if (parseInt(arr[j].date.slice(0, 1)) < parseInt(arr[j + 1].date.slice(0, 1))) {
-                                let temp = arr[j]
-                                arr[j] = arr[j + 1]
-                                arr[j + 1] = temp
-                            }
-                        }
-                    }
-                    return arr
-                }
-                let newList = sortList(list)
                 res.status(200).json({
                     type: 'success', data: {
                         message: 'Get data success',
