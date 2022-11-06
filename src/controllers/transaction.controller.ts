@@ -119,6 +119,44 @@ class TransactionController {
         }
     }
 
+    // async findTransactionCustom(req: Request, res: Response) {
+    //     const walletId = req.params.id;
+    //     try {
+    //         const startDate = req.body.start_date ;
+    //         const endDate = req.body.end_date ;
+    //         const userId = req.body.user_id;
+    //         const transaction = await TransactionModel.find({user_id : userId,wallet_id : walletId ,date :  {$gte: startDate, $lte: endDate} })
+    //         console.log(transaction)
+    //         if (transaction) {
+    //
+    //             res.status(200).json({ type: 'success', message: 'find transaction successfully!' });
+    //         }else {
+    //             res.status(200).json({ type: 'error', message: 'transaction not exist!' })
+    //         }
+    //     }catch (err) {
+    //         res.status(500).json('Server error');
+    //     }
+    // }
+
+    async findTransactionCustom(req: Request, res: Response) {
+        const walletId = req.params.id;
+        try {
+            const startDate = req.body.start_date ;
+            const endDate = req.body.end_date ;
+            const userId = req.body.user_id;
+            const transaction = await TransactionModel.find({user_id : userId,wallet_id : walletId ,date :  {$gte: startDate, $lte: endDate} })
+            console.log(transaction)
+            if (transaction) {
+
+                res.status(200).json({ type: 'success', message: 'find transaction successfully!' });
+            }else {
+                res.status(200).json({ type: 'error', message: 'transaction not exist!' })
+            }
+        }catch (err) {
+            res.status(500).json('Server error');
+        }
+    }
+
 
 
 }

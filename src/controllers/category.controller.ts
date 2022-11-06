@@ -6,7 +6,7 @@ class CategoryController {
         try {
             let data = req.body
             await CategoryModel.create(data)
-            res.status(200).json({ type: 'success', message: 'Create Category Succesfully!' })
+            res.status(200).json({ type: 'success', message: 'Create Category Successfully!' })
         }catch (err) {
             res.status(500).json('Server error');
         }
@@ -20,9 +20,11 @@ class CategoryController {
             if(categoryOfUser.length > 0 || categories.length > 0) {
                 let categoryUser = categoryOfUser.concat(categories)
                 res.status(200).json({type: 'success', message: 'get categories successfully!',categoryUser});
+            }else {
+                res.status(200).json({ type: 'error', message: "category not exits!!!" })
             }
         }catch (err) {
-            res.status(200).json({ type: 'error',message: err })
+            res.status(200).json({ type: 'error',message: 'Server error' })
         }
 
     }
