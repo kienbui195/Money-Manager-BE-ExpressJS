@@ -31,8 +31,5 @@ app.use('/transaction', transactionRoute);
 app.use('/category', categoryRoute);
 app.use('/user', userRoute)
 
-app.get('/*', (req, res) => {
-    res.send(200).json({ type: 'error', message: '404 Not Found' });
-})
 
 app.listen(port, () => console.log(`Server is running at http://localhost:${port}`));

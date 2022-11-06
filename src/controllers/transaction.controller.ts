@@ -1,21 +1,22 @@
-import {Request, Response} from 'express';
-import {TransactionModel} from "../schemas/transaction.schema";
-import {WalletModel} from "../schemas/wallet.schema";
-import {CategoryModel} from "../schemas/category.schema";
+import { Request, Response } from 'express';
+import { TransactionModel } from "../schemas/transaction.schema";
+import { WalletModel } from "../schemas/wallet.schema";
+import { CategoryModel } from "../schemas/category.schema";
+import dayjs from 'dayjs';
 
-
+dayjs().format()
 class TransactionController {
 
     async postAddTransaction(req: Request, res: Response) {
         const walletId = req.body.wallet_id;
         const categoryId = req.body.category_id;
-        const walletUser = await WalletModel.findOne({_id: walletId});
-        const category = await CategoryModel.findOne({_id: categoryId});
+        const walletUser = await WalletModel.findOne({ _id: walletId });
+        const category = await CategoryModel.findOne({ _id: categoryId });
         try {
             if (walletId && walletUser && category) {
                 const beforeAmount = walletUser.amount
                 const newAmount = walletUser.amount - req.body.amount
-                await WalletModel.findOneAndUpdate({_id: walletId}, {amount: newAmount})
+                await WalletModel.findOneAndUpdate({ _id: walletId }, { amount: newAmount })
                 const transaction = new TransactionModel({
                     category_id: categoryId,
                     category_name: category.name,
@@ -32,9 +33,9 @@ class TransactionController {
                     afterAmount: newAmount,
                 });
                 await transaction.save();
-                res.status(200).json({type: 'success', message: 'Added transaction successfully!'});
+                res.status(200).json({ type: 'success', message: 'Added transaction successfully!' });
             } else {
-                res.status(200).json({type: 'error', message: 'Please Create Wallet or Category!'})
+                res.status(200).json({ type: 'error', message: 'Please Create Wallet or Category!' })
             }
         } catch (err) {
             res.status(500).json('Server error');
@@ -44,7 +45,7 @@ class TransactionController {
     async getAllTransaction(req: Request, res: Response) {
         const userId = req.params.user_id
 
-        const transactions = await TransactionModel.find({user_id: userId})
+        const transactions = await TransactionModel.find({ user_id: userId })
         try {
             if (transactions.length > 0) {
                 res.status(200).json({
@@ -54,7 +55,7 @@ class TransactionController {
                     }
                 })
             } else {
-                res.status(200).json({type: 'notexist', message: 'Not Exist!'})
+                res.status(200).json({ type: 'notexist', message: 'Not Exist!' })
             }
 
         } catch (err) {
@@ -65,39 +66,39 @@ class TransactionController {
 
     async updateTransaction(req: Request, res: Response) {
         const transactionId = req.params.id;
-        const transaction = await TransactionModel.findOne({_id: transactionId});
-        const walletId =  req.body.wallet_id;
-        const categoryId =  req.body.category_id;
-        const walletUser = await WalletModel.findOne({_id: walletId});
-        const category = await CategoryModel.findOne({_id: categoryId});
+        const transaction = await TransactionModel.findOne({ _id: transactionId });
+        const walletId = req.body.wallet_id;
+        const categoryId = req.body.category_id;
+        const walletUser = await WalletModel.findOne({ _id: walletId });
+        const category = await CategoryModel.findOne({ _id: categoryId });
         try {
-            if(walletId && walletUser && category && transaction) {
+            if (walletId && walletUser && category && transaction) {
                 const oldAmount = transaction.amount;
                 const updateAmount = walletUser.amount + oldAmount
-                await WalletModel.findOneAndUpdate({_id: walletId},{amount: updateAmount})
-                const walletUserNew = await WalletModel.findOne({_id: walletId});
-                if(walletUserNew) {
+                await WalletModel.findOneAndUpdate({ _id: walletId }, { amount: updateAmount })
+                const walletUserNew = await WalletModel.findOne({ _id: walletId });
+                if (walletUserNew) {
                     const afterAmount = walletUserNew.amount - req.body.amount
-                    await WalletModel.findOneAndUpdate({_id: walletId},{amount: afterAmount})
+                    await WalletModel.findOneAndUpdate({ _id: walletId }, { amount: afterAmount })
                     const beforeAmount = walletUserNew.amount
                     const newTransaction = {
                         category_id: categoryId,
-                        category_name : category.name,
-                        category_icon : category.icon,
+                        category_name: category.name,
+                        category_icon: category.icon,
                         date: req.body.date,
                         amount: req.body.amount,
                         wallet_id: walletId,
-                        wallet_name : walletUser.name,
-                        wallet_icon : walletUser.icon,
-                        user_id:  transaction.user_id,
+                        wallet_name: walletUser.name,
+                        wallet_icon: walletUser.icon,
+                        user_id: transaction.user_id,
                         note: req.body.note,
-                        beforeAmount:beforeAmount,
-                        afterAmount:afterAmount,
+                        beforeAmount: beforeAmount,
+                        afterAmount: afterAmount,
                     };
-                    await TransactionModel.findByIdAndUpdate({_id:transactionId},newTransaction);
+                    await TransactionModel.findByIdAndUpdate({ _id: transactionId }, newTransaction);
                 }
                 res.status(200).json({ type: 'success', message: 'Update transaction successfully!' });
-            }else {
+            } else {
                 res.status(200).json({ type: 'error', message: 'Update Error!' })
             }
         } catch (err) {
@@ -108,20 +109,64 @@ class TransactionController {
     async deleteTransaction(req: Request, res: Response) {
         try {
             const id = req.params.id;
-            const transaction = await TransactionModel.findOne({_id:id})
+            const transaction = await TransactionModel.findOne({ _id: id })
             if (transaction) {
-                await TransactionModel.deleteOne({_id:id})
+                await TransactionModel.deleteOne({ _id: id })
                 res.status(200).json({ type: 'success', message: 'Delete transaction successfully!' });
-            }else {
+            } else {
                 res.status(200).json({ type: 'error', message: 'Delete Error!' })
             }
-        }catch (err) {
+        } catch (err) {
             res.status(500).json('Server error');
         }
     }
 
-
-
+    async getTransactionsInfoThisMonth(req: Request, res: Response) {
+        dayjs().format()
+        const now = dayjs()
+        const month = now.format('DD/MM/YYYY').slice(3, 9)
+        const userID = req.params.id;
+        try {
+            const transactions = await TransactionModel.find({ user_id: userID })
+            if (transactions.length > 0) {
+                let list: any = []
+                transactions.forEach((item) => {
+                    if (item.date.slice(3, 9) === month) {
+                        list.push(item)
+                    }
+                })
+                let inflow: number = 0
+                let outflow: number = 0
+                list.forEach((item: any) => {
+                    if (item.category_type === 'income') {
+                        inflow += item.amount
+                    }
+                    if (item.category_type === 'expense') {
+                        outflow += item.amount
+                    }
+                });
+                let newList = list.reverse()
+                res.status(200).json({
+                    type: 'success', data: {
+                        message: 'Get data success',
+                        list: newList,
+                        outflow: outflow,
+                        inflow: inflow
+                    }
+                })
+            } else {
+                res.status(200).json({
+                    type: 'null', data: {
+                        list: [],
+                        inflow: 0,
+                        outflow: 0
+                    }
+                })
+            }
+        } catch (err) {
+            res.status(500).json('Server error')
+        }
+    }
 }
 
 const transactionController = new TransactionController();

@@ -30,7 +30,4 @@ app.use('/wallet', wallet_route_1.default);
 app.use('/transaction', transaction_route_1.default);
 app.use('/category', category_route_1.default);
 app.use('/user', user_route_1.default);
-app.get('/*', (req, res) => {
-    res.send(200).json({ type: 'error', message: '404 Not Found' });
-});
 app.listen(port, () => console.log(`Server is running at http://localhost:${port}`));

@@ -4,6 +4,7 @@ interface ITransaction {
     category_id: string,
     category_name: string,
     category_icon: string,
+    category_type: string,
     date: string,
     beforeAmount: number,
     amount: number,
@@ -18,7 +19,8 @@ interface ITransaction {
 const transactionSchema = new Schema<ITransaction>({
     category_id: String,
     category_name : String,
-    category_icon : String,
+    category_icon: String,
+    category_type: String,
     date: String,
     beforeAmount : Number,
     amount:  Number,
