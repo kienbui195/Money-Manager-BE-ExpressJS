@@ -15,7 +15,7 @@ class TransactionController {
         const category = await CategoryModel.findOne({ _id: categoryId });
         try {
             if (walletId && walletUser && category) {
-                const userID = req.params.id
+                const userID = req.body.user_id
                 let beforeAmount = walletUser.amount
                 let newAmount: number = 0
                 if (category.type === 'expense') {
