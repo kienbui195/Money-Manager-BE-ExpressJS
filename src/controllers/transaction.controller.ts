@@ -15,10 +15,16 @@ class TransactionController {
         const category = await CategoryModel.findOne({ _id: categoryId });
         try {
             if (walletId && walletUser && category) {
-                const beforeAmount = walletUser.amount
-                const newAmount = walletUser.amount - req.body.amount
+                const userID = req.params.id
+                let beforeAmount = walletUser.amount
+                let newAmount: number = 0
+                if (category.type === 'expense') {
+                    newAmount = walletUser.amount - req.body.amount
+                } else {
+                    newAmount = walletUser.amount + req.body.amount
+                }
                 await WalletModel.findOneAndUpdate({ _id: walletId }, { amount: newAmount })
-                const transaction = new TransactionModel({
+                const transaction = ({
                     category_id: categoryId,
                     category_name: category.name,
                     category_icon: category.icon,
@@ -28,12 +34,12 @@ class TransactionController {
                     wallet_id: walletId,
                     wallet_name: walletUser.name,
                     wallet_icon: walletUser.icon,
-                    user_id: req.body.user_id,
+                    user_id: userID,
                     note: req.body.note,
                     beforeAmount: beforeAmount,
                     afterAmount: newAmount,
                 });
-                await transaction.save();
+                await TransactionModel.create(transaction);
                 res.status(200).json({ type: 'success', message: 'Added transaction successfully!' });
             } else {
                 res.status(200).json({ type: 'error', message: 'Please Create Wallet or Category!' })
@@ -131,9 +137,9 @@ class TransactionController {
 
         try {
             if (transactions.length > 0) {
-                let list: any[] = []
+                let list: any = []
                 transactions.forEach((item) => {
-                    if (item.date.slice(3, 9) === month) {
+                    if (item.date.slice(3, 9) == month) {
                         list.push(item)
                     }
                 })
