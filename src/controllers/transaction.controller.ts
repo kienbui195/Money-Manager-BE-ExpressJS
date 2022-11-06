@@ -145,7 +145,20 @@ class TransactionController {
                         outflow += item.amount
                     }
                 });
-                let newList = list.reverse()
+
+                const sortList = (arr: any[]) => {
+                    for (let i = 0; i < arr.length; i++) {
+                        for (let j = 0; j < (arr.length - i - 1); j++) {
+                            if (parseInt(arr[j].date.slice(0, 1)) < parseInt(arr[j + 1].date.slice(0, 1))) {
+                                let temp = arr[j]
+                                arr[j] = arr[j + 1]
+                                arr[j + 1] = temp
+                            }
+                        }
+                    }
+                    return arr
+                }
+                let newList = sortList(list)
                 res.status(200).json({
                     type: 'success', data: {
                         message: 'Get data success',
