@@ -4,14 +4,14 @@ export interface ICategory {
     user_id: string,
     icon: string,
     name: string,
-    type: number
+    type: string
 }
 
 const categorySchema = new Schema<ICategory>({
     user_id : String,
     icon: String,
     name: String,
-    type: Number
+    type: String
 });
 
 const CategoryModel = model<ICategory>('Category', categorySchema);
