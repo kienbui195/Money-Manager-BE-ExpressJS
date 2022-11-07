@@ -23,6 +23,7 @@ class WalletController {
             amount : data.amount
         })
         let allWallet = await WalletModel.findOne({ name: wallet.name })
+        
         try {
             if (!allWallet) {
                 wallet.save()
