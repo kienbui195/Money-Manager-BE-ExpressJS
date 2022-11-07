@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const wallet_schema_1 = require("../schemas/wallet.schema");
+const transaction_schema_1 = require("../schemas/transaction.schema");
 class WalletController {
     getWalletByIdUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -37,6 +38,25 @@ class WalletController {
             try {
                 if (!allWallet) {
                     wallet.save();
+                    let Wallet = yield wallet_schema_1.WalletModel.findOne({ name: data.name });
+                    if (Wallet) {
+                        let transaction = {
+                            category_id: '',
+                            category_name: '',
+                            category_icon: '',
+                            category_type: 'income',
+                            date: req.body.date,
+                            amount: wallet.amount,
+                            wallet_id: Wallet._id,
+                            wallet_name: wallet.name,
+                            wallet_icon: wallet.icon,
+                            user_id: data.user_id,
+                            note: '',
+                            beforeAmount: 0,
+                            afterAmount: wallet.amount,
+                        };
+                        yield transaction_schema_1.TransactionModel.create(transaction);
+                    }
                     res.status(200).json({
                         type: 'success', message: {
                             wallet: wallet,
