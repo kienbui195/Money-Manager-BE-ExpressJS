@@ -24,18 +24,20 @@ class WalletController {
             amount : data.amount
         })
         let allWallet = await WalletModel.findOne({ name: wallet.name })
-        
         try {
             if (!allWallet) {
                 wallet.save()
-                let Wallet = await WalletModel.findOne({ name: data.name})
+                let Wallet = await WalletModel.findOne({ name: wallet.name})
+                let dateNow = new Date().getDate()
+                let monthNow = new Date().getMonth()
+                let year = new Date().getFullYear()
                 if (Wallet) {
                     let transaction = {
                         category_id: '',
                         category_name: '',
                         category_icon: '',
                         category_type: 'income',
-                        date: req.body.date,
+                        date: `${monthNow+1}/${dateNow}/${year}`,
                         amount: wallet.amount,
                         wallet_id: Wallet._id,
                         wallet_name: wallet.name,
@@ -45,6 +47,7 @@ class WalletController {
                         beforeAmount: 0,
                         afterAmount: wallet.amount,
                     }
+                    console.log(111)
                     await TransactionModel.create(transaction)
                 }
                 res.status(200).json({
