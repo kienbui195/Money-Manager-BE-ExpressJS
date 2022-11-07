@@ -34,8 +34,8 @@ class WalletController {
                 if (Wallet) {
                     let transaction = {
                         category_id: '',
-                        category_name: '',
-                        category_icon: '',
+                        category_name: 'Add Wallet',
+                        category_icon: wallet.icon,
                         category_type: 'income',
                         date: `${monthNow+1}/${dateNow}/${year}`,
                         amount: wallet.amount,
@@ -66,7 +66,6 @@ class WalletController {
     async updateWallet(req: Request, res: Response) {
         const wallet = req.body;
         let idWallet = req.params.id;
-        
         let walletFind = await WalletModel.findOne({ _id: idWallet })
         try {
             if (walletFind) {
