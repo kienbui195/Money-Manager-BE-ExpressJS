@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { UserModel } from "../schemas/user.model";
 import { WalletModel } from "../schemas/wallet.schema";
+import {TransactionModel} from "../schemas/transaction.schema";
 class WalletController {
 
     async getWalletByIdUser(req: Request, res: Response) {
@@ -23,9 +24,29 @@ class WalletController {
             amount : data.amount
         })
         let allWallet = await WalletModel.findOne({ name: wallet.name })
+        
         try {
             if (!allWallet) {
                 wallet.save()
+                let Wallet = await WalletModel.findOne({ name: data.name})
+                if (Wallet) {
+                    let transaction = {
+                        category_id: '',
+                        category_name: '',
+                        category_icon: '',
+                        category_type: 'income',
+                        date: req.body.date,
+                        amount: wallet.amount,
+                        wallet_id: Wallet._id,
+                        wallet_name: wallet.name,
+                        wallet_icon: wallet.icon,
+                        user_id: data.user_id,
+                        note:'',
+                        beforeAmount: 0,
+                        afterAmount: wallet.amount,
+                    }
+                    await TransactionModel.create(transaction)
+                }
                 res.status(200).json({
                     type: 'success', message: {
                         wallet: wallet,
