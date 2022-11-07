@@ -38,14 +38,17 @@ class WalletController {
             try {
                 if (!allWallet) {
                     wallet.save();
-                    let Wallet = yield wallet_schema_1.WalletModel.findOne({ name: data.name });
+                    let Wallet = yield wallet_schema_1.WalletModel.findOne({ name: wallet.name });
+                    let dateNow = new Date().getDate();
+                    let monthNow = new Date().getMonth();
+                    let year = new Date().getFullYear();
                     if (Wallet) {
                         let transaction = {
                             category_id: '',
                             category_name: '',
                             category_icon: '',
                             category_type: 'income',
-                            date: req.body.date,
+                            date: `${monthNow + 1}/${dateNow}/${year}`,
                             amount: wallet.amount,
                             wallet_id: Wallet._id,
                             wallet_name: wallet.name,

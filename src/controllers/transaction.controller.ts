@@ -140,18 +140,26 @@ class TransactionController {
 
     async findTransactionCustom(req: Request, res: Response) {
         try {
-            const walletId = req.params.id;
+            const walletId = req.body.wallet_id;
             const startDate = req.body.start_date ;
             const endDate = req.body.end_date ;
             const userId = req.body.user_id;
-            const transactions = await TransactionModel.find({ user_id: userId,wallet_id: walletId})
+            const transactionUser = await TransactionModel.find({ user_id: userId,wallet_id: walletId})
+            const transactionTotal = await TransactionModel.find({wallet_id: walletId})
             const transactionCustom : any[] = [];
-            transactions.forEach(transaction => {
+            if(walletId) {
+                transactionUser.forEach(transaction => {
                 if (Date.parse(transaction.date) >= Date.parse(startDate)
                     && Date.parse(transaction.date) <= Date.parse(endDate)) {
                     transactionCustom.push(transaction);
-                }
-            })
+                }})
+            } else {
+                transactionTotal.forEach(transaction => {
+                    if (Date.parse(transaction.date) >= Date.parse(startDate)
+                        && Date.parse(transaction.date) <= Date.parse(endDate)) {
+                        transactionCustom.push(transaction);
+                    }})
+            }
            if(transactionCustom.length > 0) {
                console.log(transactionCustom)
                res.status(200).json({ type: 'success', message: 'find transaction successfully!',data : transactionCustom });
