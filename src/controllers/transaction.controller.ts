@@ -145,8 +145,8 @@ class TransactionController {
             const endDate = req.body.end_date ;
             const userId = req.body.user_id;
             const transactionUser = await TransactionModel.find({ user_id: userId,wallet_id: walletId})
-            const transactionTotal = await TransactionModel.find({wallet_id: walletId})
-            const transactionCustom : any[] = [];
+            const transactionTotal = await TransactionModel.find({user_id: userId})
+            const transactionCustom : any = [];
             if(walletId) {
                 transactionUser.forEach(transaction => {
                 if (Date.parse(transaction.date) >= Date.parse(startDate)
