@@ -135,7 +135,7 @@ class TransactionController {
         const userID = req.params.id;
         let transactions = await TransactionModel.find({ user_id: userID })
 
-        try {
+        try {   
             if (transactions.length > 0) {
                 let list: any = []
                 transactions.forEach((transaction) => {
