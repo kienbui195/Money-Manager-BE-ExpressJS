@@ -16,7 +16,6 @@ class TransactionController {
         const category = await CategoryModel.findOne({ _id: categoryId });
         try {
             if (walletId && walletUser && category && userId) {
-                let beforeAmount = walletUser.amount
                 let newAmount: number = 0
                 if (category.type === 'expense') {
                     newAmount = walletUser.amount - req.body.amount
@@ -36,8 +35,6 @@ class TransactionController {
                     wallet_icon: walletUser.icon,
                     user_id: userId,
                     note: req.body.note,
-                    beforeAmount: beforeAmount,
-                    afterAmount: newAmount,
                 });
                 await TransactionModel.create(transaction);
                 res.status(200).json({ type: 'success', message: 'Added transaction successfully!' });
@@ -80,31 +77,27 @@ class TransactionController {
         const category = await CategoryModel.findOne({ _id: categoryId });
         try {
             if (walletId && walletUser && category && transaction) {
-                const oldAmount = transaction.amount;
-                const updateAmount = walletUser.amount + oldAmount
-                await WalletModel.findOneAndUpdate({ _id: walletId }, { amount: updateAmount })
-                const walletUserNew = await WalletModel.findOne({ _id: walletId });
-                if (walletUserNew) {
-                    const afterAmount = walletUserNew.amount - req.body.amount
-                    await WalletModel.findOneAndUpdate({ _id: walletId }, { amount: afterAmount })
-                    const beforeAmount = walletUserNew.amount
-                    const newTransaction = {
-                        category_id: categoryId,
-                        category_name: category.name,
-                        category_icon: category.icon,
-                        category_type : category.type,
-                        date: req.body.date,
-                        amount: req.body.amount,
-                        wallet_id: walletId,
-                        wallet_name: walletUser.name,
-                        wallet_icon: walletUser.icon,
-                        user_id: transaction.user_id,
-                        note: req.body.note,
-                        beforeAmount: beforeAmount,
-                        afterAmount: afterAmount,
-                    };
-                    await TransactionModel.findByIdAndUpdate({ _id: transactionId }, newTransaction);
+                if (transaction.category_type === 'expense') {
+                    let updateAmount = walletUser.amount + transaction.amount - req.body.amount
+                    await WalletModel.findOneAndUpdate({ _id: walletId }, { amount: updateAmount })
+                } else {
+                    let updateAmount = walletUser.amount - transaction.amount + req.body.amount
+                    await WalletModel.findOneAndUpdate({ _id: walletId }, { amount: updateAmount })
                 }
+                const newTransaction = {
+                    category_id: categoryId,
+                    category_name: category.name,
+                    category_icon: category.icon,
+                    category_type : category.type,
+                    date: req.body.date,
+                    amount: req.body.amount,
+                    wallet_id: walletId,
+                    wallet_name: walletUser.name,
+                    wallet_icon: walletUser.icon,
+                    user_id: transaction.user_id,
+                    note: req.body.note,
+                };
+                await TransactionModel.findByIdAndUpdate({ _id: transactionId }, newTransaction);
                 res.status(200).json({ type: 'success', message: 'Update transaction successfully!' });
             } else {
                 res.status(200).json({ type: 'error', message: 'Update Error!' })
@@ -145,8 +138,8 @@ class TransactionController {
             const endDate = req.body.end_date ;
             const userId = req.body.user_id;
             const transactionUser = await TransactionModel.find({ user_id: userId,wallet_id: walletId})
-            const transactionTotal = await TransactionModel.find({wallet_id: walletId})
-            const transactionCustom : any[] = [];
+            const transactionTotal = await TransactionModel.find({user_id: userId})
+            const transactionCustom : any = [];
             if(walletId) {
                 transactionUser.forEach(transaction => {
                 if (Date.parse(transaction.date) >= Date.parse(startDate)

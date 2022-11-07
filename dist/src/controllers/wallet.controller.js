@@ -45,8 +45,8 @@ class WalletController {
                     if (Wallet) {
                         let transaction = {
                             category_id: '',
-                            category_name: '',
-                            category_icon: '',
+                            category_name: 'Add Wallet',
+                            category_icon: wallet.icon,
                             category_type: 'income',
                             date: `${monthNow + 1}/${dateNow}/${year}`,
                             amount: wallet.amount,
