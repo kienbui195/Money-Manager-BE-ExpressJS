@@ -9,13 +9,13 @@ dayjs().format()
 class TransactionController {
 
     async postAddTransaction(req: Request, res: Response) {
+        const userId = req.body.user_id
         const walletId = req.body.wallet_id;
         const categoryId = req.body.category_id;
         const walletUser = await WalletModel.findOne({ _id: walletId });
         const category = await CategoryModel.findOne({ _id: categoryId });
         try {
-            if (walletId && walletUser && category) {
-                const userID = req.body.user_id
+            if (walletId && walletUser && category && userId) {
                 let beforeAmount = walletUser.amount
                 let newAmount: number = 0
                 if (category.type === 'expense') {
@@ -34,7 +34,7 @@ class TransactionController {
                     wallet_id: walletId,
                     wallet_name: walletUser.name,
                     wallet_icon: walletUser.icon,
-                    user_id: userID,
+                    user_id: userId,
                     note: req.body.note,
                     beforeAmount: beforeAmount,
                     afterAmount: newAmount,
@@ -92,6 +92,7 @@ class TransactionController {
                         category_id: categoryId,
                         category_name: category.name,
                         category_icon: category.icon,
+                        category_type : category.type,
                         date: req.body.date,
                         amount: req.body.amount,
                         wallet_id: walletId,
@@ -118,7 +119,16 @@ class TransactionController {
             const id = req.params.id;
             const transaction = await TransactionModel.findOne({ _id: id })
             if (transaction) {
-                await TransactionModel.deleteOne({ _id: id })
+                const walletUser = await WalletModel.findOne({ _id: transaction.wallet_id });
+               if(walletUser  && transaction.category_type == 'expense') {
+                  const updateAmount = walletUser.amount + transaction.amount
+                   await WalletModel.findOneAndUpdate({ _id: transaction.wallet_id }, { amount: updateAmount })
+                   await TransactionModel.deleteOne({ _id: id })
+               }else if(walletUser && transaction.category_type == 'income' ) {
+                   const updateAmount = walletUser.amount - transaction.amount
+                   await WalletModel.findOneAndUpdate({ _id: transaction.wallet_id }, { amount: updateAmount })
+                   await TransactionModel.deleteOne({ _id: id })
+               }
                 res.status(200).json({ type: 'success', message: 'Delete transaction successfully!' });
             } else {
                 res.status(200).json({ type: 'error', message: 'Delete Error!' })
@@ -128,6 +138,32 @@ class TransactionController {
         }
     }
 
+    async findTransactionCustom(req: Request, res: Response) {
+        try {
+            const walletId = req.params.id;
+            const startDate = req.body.start_date ;
+            const endDate = req.body.end_date ;
+            const userId = req.body.user_id;
+            const transactions = await TransactionModel.find({ user_id: userId,wallet_id: walletId})
+            const transactionCustom : any[] = [];
+            transactions.forEach(transaction => {
+                if (Date.parse(transaction.date) >= Date.parse(startDate)
+                    && Date.parse(transaction.date) <= Date.parse(endDate)) {
+                    transactionCustom.push(transaction);
+                }
+            })
+           if(transactionCustom.length > 0) {
+               console.log(transactionCustom)
+               res.status(200).json({ type: 'success', message: 'find transaction successfully!',data : transactionCustom });
+           }else {
+               res.status(200).json({ type: 'error', message: 'transaction not exist!' })
+           }
+        }catch (err) {
+            res.status(500).json('Server error');
+        }
+    }
+
+
     async getTransactionsInfoThisMonth(req: Request, res: Response) {
         const month = new Date().getMonth() + 1;
         const year = new Date().getFullYear();
@@ -135,7 +171,8 @@ class TransactionController {
         const userID = req.params.id;
         let transactions = await TransactionModel.find({ user_id: userID })
 
-        try {   
+
+        try {
             if (transactions.length > 0) {
                 let list: any = []
                 transactions.forEach((transaction) => {
