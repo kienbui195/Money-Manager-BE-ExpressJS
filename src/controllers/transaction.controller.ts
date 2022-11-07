@@ -165,9 +165,9 @@ class TransactionController {
 
 
     async getTransactionsInfoThisMonth(req: Request, res: Response) {
-        dayjs().format()
-        let now = dayjs()
-        let month = now.format('DD/MM/YYYY').slice(3, 9)
+        const month = new Date().getMonth() + 1;
+        const year = new Date().getFullYear();
+        let daysInThisMonth = new Date(year, month, 0).getDate();
         const userID = req.params.id;
         let transactions = await TransactionModel.find({ user_id: userID })
 
@@ -175,14 +175,15 @@ class TransactionController {
         try {
             if (transactions.length > 0) {
                 let list: any = []
-                transactions.forEach((item) => {
-                    if (item.date.slice(3, 9) == month) {
-                        list.push(item)
+                transactions.forEach((transaction) => {
+                    
+                    if (Date.parse(transaction.date) >= Date.parse(`${month}/01/${year}`) && Date.parse(transaction.date) <= Date.parse(`${month}/${daysInThisMonth}/${year}`)) {
+                        list.push(transaction)
                     }
                 })
                 let inflow: number = 0
                 let outflow: number = 0
-                
+
                 let newList = list.reverse()
 
                 newList.forEach((item: any) => {
