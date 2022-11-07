@@ -140,7 +140,7 @@ class TransactionController {
 
     async findTransactionCustom(req: Request, res: Response) {
         try {
-            const walletId = req.params.id;
+            const walletId = req.body.wallet_id;
             const startDate = req.body.start_date ;
             const endDate = req.body.end_date ;
             const userId = req.body.user_id;
