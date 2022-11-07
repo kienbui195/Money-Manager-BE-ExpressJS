@@ -4,6 +4,7 @@ import { WalletModel } from "../schemas/wallet.schema";
 import { CategoryModel } from "../schemas/category.schema";
 import dayjs from 'dayjs';
 import sortDecrease from './../tools/sortArray/sortDecrease';
+import getFormatDate from './../tools/formatDate';
 
 dayjs().format()
 class TransactionController {
@@ -113,15 +114,15 @@ class TransactionController {
             const transaction = await TransactionModel.findOne({ _id: id })
             if (transaction) {
                 const walletUser = await WalletModel.findOne({ _id: transaction.wallet_id });
-               if(walletUser  && transaction.category_type == 'expense') {
-                  const updateAmount = walletUser.amount + transaction.amount
-                   await WalletModel.findOneAndUpdate({ _id: transaction.wallet_id }, { amount: updateAmount })
-                   await TransactionModel.deleteOne({ _id: id })
-               }else if(walletUser && transaction.category_type == 'income' ) {
-                   const updateAmount = walletUser.amount - transaction.amount
-                   await WalletModel.findOneAndUpdate({ _id: transaction.wallet_id }, { amount: updateAmount })
-                   await TransactionModel.deleteOne({ _id: id })
-               }
+                if (walletUser && transaction.category_type == 'expense') {
+                    const updateAmount = walletUser.amount + transaction.amount
+                    await WalletModel.findOneAndUpdate({ _id: transaction.wallet_id }, { amount: updateAmount })
+                    await TransactionModel.deleteOne({ _id: id })
+                } else if (walletUser && transaction.category_type == 'income') {
+                    const updateAmount = walletUser.amount - transaction.amount
+                    await WalletModel.findOneAndUpdate({ _id: transaction.wallet_id }, { amount: updateAmount })
+                    await TransactionModel.deleteOne({ _id: id })
+                }
                 res.status(200).json({ type: 'success', message: 'Delete transaction successfully!' });
             } else {
                 res.status(200).json({ type: 'error', message: 'Delete Error!' })
@@ -134,32 +135,56 @@ class TransactionController {
     async findTransactionCustom(req: Request, res: Response) {
         try {
             const walletId = req.body.wallet_id;
-            const startDate = req.body.start_date ;
-            const endDate = req.body.end_date ;
+            const startDate = req.body.start_date;
+            const endDate = req.body.end_date;
             const userId = req.body.user_id;
-            const transactionUser = await TransactionModel.find({ user_id: userId,wallet_id: walletId})
-            const transactionTotal = await TransactionModel.find({user_id: userId})
-            const transactionCustom : any = [];
-            if(walletId) {
-                transactionUser.forEach(transaction => {
-                if (Date.parse(transaction.date) >= Date.parse(startDate)
-                    && Date.parse(transaction.date) <= Date.parse(endDate)) {
-                    transactionCustom.push(transaction);
-                }})
+            const transactionUser = await TransactionModel.find({ user_id: userId, wallet_id: walletId })
+            const transactionTotal = await TransactionModel.find({ user_id: userId })
+            const transactionCustom: any = [];
+
+            if (!startDate && !endDate) {
+                let today = new Date();
+                let dateNow = getFormatDate(today)
+                if (!walletId) {
+                    for (let item of transactionTotal) {
+                        if (Date.parse(item.date) === Date.parse(dateNow)) {
+                            transactionCustom.push(item)
+                        }
+                    }
+                    res.status(200).json({ type: 'success', data: transactionCustom })
+                } else {
+                    for (let item of transactionUser) {
+                        if (Date.parse(item.date) === Date.parse(dateNow)) {
+                            transactionCustom.push(item)
+                        }
+                    }
+                    res.status(200).json({ type: 'success', data: transactionCustom })
+
+                }
             } else {
-                transactionTotal.forEach(transaction => {
-                    if (Date.parse(transaction.date) >= Date.parse(startDate)
-                        && Date.parse(transaction.date) <= Date.parse(endDate)) {
-                        transactionCustom.push(transaction);
-                    }})
+                if (walletId) {
+                    transactionUser.forEach(transaction => {
+                        if (Date.parse(transaction.date) >= Date.parse(startDate)
+                            && Date.parse(transaction.date) <= Date.parse(endDate)) {
+                            transactionCustom.push(transaction);
+                        }
+                    })
+                } else {
+                    transactionTotal.forEach(transaction => {
+                        if (Date.parse(transaction.date) >= Date.parse(startDate)
+                            && Date.parse(transaction.date) <= Date.parse(endDate)) {
+                            transactionCustom.push(transaction);
+                        }
+                    })
+                }
+                if (transactionCustom.length > 0) {
+                    console.log(transactionCustom)
+                    res.status(200).json({ type: 'success', message: 'find transaction successfully!', data: transactionCustom });
+                } else {
+                    res.status(200).json({ type: 'error', message: 'transaction not exist!' })
+                }
             }
-           if(transactionCustom.length > 0) {
-               console.log(transactionCustom)
-               res.status(200).json({ type: 'success', message: 'find transaction successfully!',data : transactionCustom });
-           }else {
-               res.status(200).json({ type: 'error', message: 'transaction not exist!' })
-           }
-        }catch (err) {
+        } catch (err) {
             res.status(500).json('Server error');
         }
     }
@@ -177,7 +202,7 @@ class TransactionController {
             if (transactions.length > 0) {
                 let list: any = []
                 transactions.forEach((transaction) => {
-                    
+
                     if (Date.parse(transaction.date) >= Date.parse(`${month}/01/${year}`) && Date.parse(transaction.date) <= Date.parse(`${month}/${daysInThisMonth}/${year}`)) {
                         list.push(transaction)
                     }
