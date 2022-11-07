@@ -47,7 +47,6 @@ class WalletController {
                         beforeAmount: 0,
                         afterAmount: wallet.amount,
                     }
-                    console.log(111)
                     await TransactionModel.create(transaction)
                 }
                 res.status(200).json({
