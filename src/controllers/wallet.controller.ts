@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { UserModel } from "../schemas/user.model";
 import { WalletModel } from "../schemas/wallet.schema";
 import {TransactionModel} from "../schemas/transaction.schema";
+import getFormatDate from './../tools/formatDate';
 class WalletController {
 
     async getWalletByIdUser(req: Request, res: Response) {
@@ -20,24 +21,22 @@ class WalletController {
             icon : data.icon,
             name : data.name,
             user_id: data.user_id,
-            // Lay id params
             amount : data.amount
         })
         let allWallet = await WalletModel.findOne({ name: wallet.name })
         try {
             if (!allWallet) {
-                wallet.save()
+                await wallet.save()
                 let Wallet = await WalletModel.findOne({ name: wallet.name})
-                let dateNow = new Date().getDate()
-                let monthNow = new Date().getMonth()
-                let year = new Date().getFullYear()
+                let dateNow = new Date()
+                let date = getFormatDate(dateNow)
                 if (Wallet) {
                     let transaction = {
                         category_id: '',
                         category_name: 'Add Wallet',
                         category_icon: wallet.icon,
                         category_type: 'income',
-                        date: `${monthNow+1}/${dateNow}/${year}`,
+                        date: date,
                         amount: wallet.amount,
                         wallet_id: Wallet._id,
                         wallet_name: wallet.name,
