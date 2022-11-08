@@ -127,7 +127,6 @@ class TransactionController {
                        await WalletModel.findOneAndDelete({ _id:transaction.wallet_id})
                        await TransactionModel.deleteOne({ _id: id })
                    }
-
                }
                 res.status(200).json({ type: 'success', message: 'Delete transaction successfully!' });
             } else {
