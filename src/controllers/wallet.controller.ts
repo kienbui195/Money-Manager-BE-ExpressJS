@@ -2,8 +2,9 @@ import { Request, Response } from "express";
 import { UserModel } from "../schemas/user.model";
 import { WalletModel } from "../schemas/wallet.schema";
 import {TransactionModel} from "../schemas/transaction.schema";
-import getFormatDate from './../tools/formatDate';
+import getFormatDate from "../tools/formatDate";
 class WalletController {
+
 
     async getWalletByIdUser(req: Request, res: Response) {
         let id = req.params.id;
@@ -26,17 +27,17 @@ class WalletController {
         let allWallet = await WalletModel.findOne({ name: wallet.name })
         try {
             if (!allWallet) {
-                await wallet.save()
-                let Wallet = await WalletModel.findOne({ name: wallet.name})
-                let dateNow = new Date()
-                let date = getFormatDate(dateNow)
+               await wallet.save()
+                let Wallet = await WalletModel.findOne({ name: wallet.name, user_id: data.user_id})
+                let today = new Date();
+                let dateNow = getFormatDate(today)
                 if (Wallet) {
                     let transaction = {
                         category_id: '',
                         category_name: 'Add Wallet',
                         category_icon: wallet.icon,
                         category_type: 'income',
-                        date: date,
+                        date: dateNow,
                         amount: wallet.amount,
                         wallet_id: Wallet._id,
                         wallet_name: wallet.name,
@@ -80,15 +81,14 @@ class WalletController {
                      type = 'expense'
                     amount = walletFind.amount - wallet.amount
                 }
-                let dateNow = new Date().getDate()
-                let monthNow = new Date().getMonth()
-                let year = new Date().getFullYear()
+                let today = new Date();
+                let dateNow = getFormatDate(today)
                     let transaction = {
                         category_id: '',
                         category_name: name,
                         category_icon: wallet.icon,
                         category_type: type,
-                        date: `${monthNow+1}/${dateNow}/${year}`,
+                        date: dateNow,
                         amount: amount,
                         wallet_id: walletFind._id,
                         wallet_name: wallet.name,
