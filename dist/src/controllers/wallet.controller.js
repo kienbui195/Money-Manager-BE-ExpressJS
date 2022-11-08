@@ -37,8 +37,8 @@ class WalletController {
             let allWallet = yield wallet_schema_1.WalletModel.findOne({ name: wallet.name });
             try {
                 if (!allWallet) {
-                    wallet.save();
-                    let Wallet = yield wallet_schema_1.WalletModel.findOne({ name: wallet.name });
+                    yield wallet.save();
+                    let Wallet = yield wallet_schema_1.WalletModel.findOne({ name: wallet.name, user_id: data.user_id });
                     let dateNow = new Date().getDate();
                     let monthNow = new Date().getMonth();
                     let year = new Date().getFullYear();
