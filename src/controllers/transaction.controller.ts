@@ -16,7 +16,7 @@ class TransactionController {
         const walletUser = await WalletModel.findOne({ _id: walletId });
         const category = await CategoryModel.findOne({ _id: categoryId });
         try {
-            if (walletId && walletUser && category && userId) {
+            if (walletId && walletUser && category && userId ) {
                 let newAmount: number = 0
                 if (category.type === 'expense') {
                     newAmount = walletUser.amount - req.body.amount
@@ -40,7 +40,7 @@ class TransactionController {
                 await TransactionModel.create(transaction);
                 res.status(200).json({ type: 'success', message: 'Added transaction successfully!' });
             } else {
-                res.status(200).json({ type: 'error', message: 'Please Create Wallet or Category!' })
+                res.status(204).json({ type: 'error', message: 'Please Create Wallet or Category!' })
             }
         } catch (err) {
             res.status(500).json('Server error');
@@ -114,18 +114,23 @@ class TransactionController {
             const transaction = await TransactionModel.findOne({ _id: id })
             if (transaction) {
                 const walletUser = await WalletModel.findOne({ _id: transaction.wallet_id });
-                if (walletUser && transaction.category_type == 'expense') {
-                    const updateAmount = walletUser.amount + transaction.amount
-                    await WalletModel.findOneAndUpdate({ _id: transaction.wallet_id }, { amount: updateAmount })
-                    await TransactionModel.deleteOne({ _id: id })
-                } else if (walletUser && transaction.category_type == 'income') {
-                    const updateAmount = walletUser.amount - transaction.amount
-                    await WalletModel.findOneAndUpdate({ _id: transaction.wallet_id }, { amount: updateAmount })
-                    await TransactionModel.deleteOne({ _id: id })
-                }
+               if(walletUser  && transaction.category_type == 'expense') {
+                  const updateAmount = walletUser.amount + transaction.amount
+                   await WalletModel.findOneAndUpdate({ _id: transaction.wallet_id }, { amount: updateAmount })
+                   await TransactionModel.deleteOne({ _id: id })
+               }else {
+                   if (walletUser && transaction.category_type == 'income' && transaction.category_name !== 'Add Wallet') {
+                       const updateAmount = walletUser.amount - transaction.amount
+                       await WalletModel.findOneAndUpdate({ _id: transaction.wallet_id }, { amount: updateAmount })
+                       await TransactionModel.deleteOne({ _id: id })
+                   }else {
+                       await WalletModel.findOneAndDelete({ _id:transaction.wallet_id})
+                       await TransactionModel.deleteOne({ _id: id })
+                   }
+               }
                 res.status(200).json({ type: 'success', message: 'Delete transaction successfully!' });
             } else {
-                res.status(200).json({ type: 'error', message: 'Delete Error!' })
+                res.status(204).json({ type: 'error', message: 'Delete Error!' })
             }
         } catch (err) {
             res.status(500).json('Server error');

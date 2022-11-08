@@ -44,8 +44,6 @@ class WalletController {
                         wallet_icon: wallet.icon,
                         user_id: data.user_id,
                         note:'',
-                        beforeAmount: 0,
-                        afterAmount: wallet.amount,
                     }
                     await TransactionModel.create(transaction)
                 }
@@ -71,6 +69,35 @@ class WalletController {
             if (walletFind) {
                 await WalletModel.findOneAndUpdate({ _id: idWallet }, wallet)
                 const newWallet = await WalletModel.findOne({_id : idWallet})
+                let name;
+                let type;
+                let amount;
+                if(walletFind.amount < wallet.amount) {
+                     name = 'Other Income'
+                     type = 'income'
+                    amount = wallet.amount - walletFind.amount
+                }else if(walletFind.amount > wallet.amount) {
+                     name = 'Other Expense'
+                     type = 'expense'
+                    amount = walletFind.amount - wallet.amount
+                }
+                let dateNow = new Date().getDate()
+                let monthNow = new Date().getMonth()
+                let year = new Date().getFullYear()
+                    let transaction = {
+                        category_id: '',
+                        category_name: name,
+                        category_icon: wallet.icon,
+                        category_type: type,
+                        date: `${monthNow+1}/${dateNow}/${year}`,
+                        amount: amount,
+                        wallet_id: walletFind._id,
+                        wallet_name: wallet.name,
+                        wallet_icon: wallet.icon,
+                        user_id: walletFind.user_id,
+                        note:'',
+                    }
+                    await TransactionModel.create(transaction)
                 res.status(200).json({ type: 'success', message: newWallet });
             } else {
                 res.status(200).json({ type: 'notexist', message: "Update wallet fail!!!" })
@@ -89,6 +116,7 @@ class WalletController {
                 res.status(200).json({ type: 'notexist', message: "No Wallet Delete" });
             } else {
                 wallet?.delete();
+                await TransactionModel.findByIdAndDelete({wallet_id : id})
                 res.status(200).json({ type: 'success', message: 'Delete successfully!' });
             }
         } catch (err) {
