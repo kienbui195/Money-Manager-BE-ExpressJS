@@ -134,7 +134,7 @@ class WalletController {
                 }
                 else {
                     wallet === null || wallet === void 0 ? void 0 : wallet.delete();
-                    yield transaction_schema_1.TransactionModel.findByIdAndDelete({ wallet_id: id });
+                    yield transaction_schema_1.TransactionModel.deleteMany({ wallet_id: id });
                     res.status(200).json({ type: 'success', message: 'Delete successfully!' });
                 }
             }
