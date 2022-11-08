@@ -60,7 +60,6 @@ class CategoryController {
             res.status(500).json({ type: 'error', message: 'Can not find id Category!! Please try again !'})
         }
     }
-
     async getCategoryByIdUser(req: Request, res: Response) {
         try {
             let userId = req.params.id;
