@@ -8,7 +8,7 @@ class CategoryController {
         try {
         if(data.user_id) {
             if(categoty?.name) {
-            res.status(505).json({message : 'Name Category already exists !'});
+            res.status(201).json({type: 'error',message : 'Name Category already exists !'});
             } else {
             await CategoryModel.create(data)
             res.status(200).json({ type: 'success', message: 'Create Category Successfully!' })
@@ -20,7 +20,6 @@ class CategoryController {
             res.status(500).json('Server error');
         }
     }
-// Tim theo id user && name category , trùng id user mới cho tạo, trùng name không cho tạo, else tạo
     async getAllCategory(req: Request, res: Response) {
         try {
             let userId = req.params.id;
@@ -33,9 +32,33 @@ class CategoryController {
                 res.status(200).json({ type: 'error', message: "category not exits!!!" })
             }
         }catch (err) {
-            res.status(200).json({ type: 'error',message: 'Server error' })
+            res.status(500).json({ type: 'error',message: 'Server error' })
         }
+    }
 
+    async postUpdateCategory(req : Request, res : Response) {
+        let category = req.body
+        let categoryID = await CategoryModel.findById({_id : req.body.id})
+        try {
+            if(categoryID) {
+                await CategoryModel.findByIdAndUpdate({_id : req.body.id},category)
+                res.status(200).json({ type: 'success', message: 'Update Category success!' });
+            } else {
+                res.status(500).json({ type: 'error', message: 'Can not find id Category!! Please try again !'})
+            }
+        } catch (error) {
+            res.status(500).json({ type: 'error',message: 'Server error' })
+        }
+    }
+
+    async deleteCategory(req : Request, res : Response) {
+        let categoryID = await CategoryModel.findById({_id : req.body.id})
+        if(categoryID) {
+            await CategoryModel.findByIdAndDelete({_id : req.body.id})
+            res.status(200).json({ type: 'success', message: 'Delete Category success!' });
+        } else {
+            res.status(500).json({ type: 'error', message: 'Can not find id Category!! Please try again !'})
+        }
     }
 }
 
