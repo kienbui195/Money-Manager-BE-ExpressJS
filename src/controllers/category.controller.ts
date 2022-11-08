@@ -4,11 +4,11 @@ import {CategoryModel} from "../schemas/category.schema";
 class CategoryController {
     async createCategory(req: Request, res: Response) {
         let data = req.body
-        let categoty =  await CategoryModel.findOne({ name: data.name })
+        let category =  await CategoryModel.findOne({ name: data.name })
         try {
         if(data.user_id) {
-            if(categoty?.name) {
-            res.status(201).json({type: 'error',message : 'Name Category already exists !'});
+            if(category?.name && category?.type === data.type) {
+            res.status(500).json({type: 'error',message : 'Name Category already exists !'});
             } else {
             await CategoryModel.create(data)
             res.status(200).json({ type: 'success', message: 'Create Category Successfully!' })
