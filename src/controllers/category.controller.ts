@@ -38,10 +38,10 @@ class CategoryController {
 
     async postUpdateCategory(req : Request, res : Response) {
         let category = req.body
-        let categoryID = await CategoryModel.findById({_id : req.body.id})
+        let categoryID = await CategoryModel.findById({_id : req.params.id})
         try {
             if(categoryID) {
-                await CategoryModel.findByIdAndUpdate({_id : req.body.id},category)
+                await CategoryModel.findByIdAndUpdate({_id : req.params.id},category)
                 res.status(200).json({ type: 'success', message: 'Update Category success!' });
             } else {
                 res.status(500).json({ type: 'error', message: 'Can not find id Category!! Please try again !'})
@@ -52,9 +52,9 @@ class CategoryController {
     }
 
     async deleteCategory(req : Request, res : Response) {
-        let categoryID = await CategoryModel.findById({_id : req.body.id})
+        let categoryID = await CategoryModel.findById({_id : req.params.id})
         if(categoryID) {
-            await CategoryModel.findByIdAndDelete({_id : req.body.id})
+            await CategoryModel.findByIdAndDelete({_id : req.params.id})
             res.status(200).json({ type: 'success', message: 'Delete Category success!' });
         } else {
             res.status(500).json({ type: 'error', message: 'Can not find id Category!! Please try again !'})
