@@ -116,7 +116,7 @@ class WalletController {
                 res.status(200).json({ type: 'notexist', message: "No Wallet Delete" });
             } else {
                 wallet?.delete();
-                await TransactionModel.findByIdAndDelete({wallet_id : id})
+                await TransactionModel.deleteMany({wallet_id : id})
                 res.status(200).json({ type: 'success', message: 'Delete successfully!' });
             }
         } catch (err) {
