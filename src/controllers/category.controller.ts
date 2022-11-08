@@ -60,6 +60,21 @@ class CategoryController {
             res.status(500).json({ type: 'error', message: 'Can not find id Category!! Please try again !'})
         }
     }
+
+    async getCategoryByIdUser(req: Request, res: Response) {
+        try {
+            let userId = req.params.id;
+            let categoryOfUser = await CategoryModel.find({ user_id: userId})
+            if (categoryOfUser) {
+                res.status(200).json({type: "Success", categoryOfUser})
+            } else {
+                res.status(200).json({type: "Error", message : "No Category"})
+            }
+        }catch (err) {
+            res.status(500).json({ type: 'error',message: 'Server error' })
+        }
+    }
+
 }
 
 const categoryController = new CategoryController();
