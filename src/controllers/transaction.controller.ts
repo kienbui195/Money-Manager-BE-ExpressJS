@@ -186,7 +186,7 @@ class TransactionController {
                 if (transactionCustom.length > 0) {
                     res.status(200).json({ type: 'success', message: 'find transaction successfully!', data: {startDate:startDate, endDate:endDate, transactions: transactionCustom}});
                 } else {
-                    res.status(200).json({ type: 'error', message: 'transaction not exist!' })
+                    res.status(200).json({ type: 'success', message: 'transaction not exist!',data: {startDate:startDate, endDate:endDate, transactions: transactionCustom} })
                 }
             }
         } catch (err) {
