@@ -58,7 +58,7 @@ class TransactionController {
                     }
                 })
             } else {
-                res.status(200).json({ type: 'notexist', message: 'Not Exist!' })
+                res.status(200).json({ type: 'notqa         st', message: 'Not Exist!' })
             }
 
         } catch (err) {
