@@ -31,7 +31,7 @@ class WalletController {
                 let Wallet = await WalletModel.findOne({ name: wallet.name, user_id: data.user_id})
                 let today = new Date();
                 let dateNow = getFormatDate(today)
-                if (Wallet) {
+                if (Wallet && wallet.amount > 0) {
                     let transaction = {
                         category_id: '',
                         category_name: 'Add Wallet',
