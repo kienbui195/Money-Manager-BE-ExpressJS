@@ -16,7 +16,7 @@ class TransactionController {
         const walletUser = await WalletModel.findOne({ _id: walletId });
         const category = await CategoryModel.findOne({ _id: categoryId });
         try {
-            if (walletId && walletUser && category && userId ) {
+            if (walletId && walletUser && category && userId && req.body.amount > 0 ) {
                 let newAmount: number = 0
                 if (category.type === 'expense') {
                     newAmount = walletUser.amount - req.body.amount
