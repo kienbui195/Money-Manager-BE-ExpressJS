@@ -157,14 +157,14 @@ class TransactionController {
                             transactionCustom.push(item)
                         }
                     }
-                    res.status(200).json({ type: 'success', data: transactionCustom })
+                    res.status(200).json({ type: 'success', data: {startDate:dateNow, endDate: dateNow, transactions: transactionCustom }})
                 } else {
                     for (let item of transactionUser) {
                         if (Date.parse(item.date) === Date.parse(dateNow)) {
                             transactionCustom.push(item)
                         }
                     }
-                    res.status(200).json({ type: 'success', data: transactionCustom })
+                    res.status(200).json({ type: 'success', data: {startDate:dateNow, endDate: dateNow, transactions: transactionCustom }})
 
                 }
             } else {
@@ -184,8 +184,7 @@ class TransactionController {
                     })
                 }
                 if (transactionCustom.length > 0) {
-                    console.log(transactionCustom)
-                    res.status(200).json({ type: 'success', message: 'find transaction successfully!', data: transactionCustom });
+                    res.status(200).json({ type: 'success', message: 'find transaction successfully!', data: {startDate:startDate, endDate:endDate, transactions: transactionCustom}});
                 } else {
                     res.status(200).json({ type: 'error', message: 'transaction not exist!' })
                 }
