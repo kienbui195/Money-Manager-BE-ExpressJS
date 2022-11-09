@@ -8,13 +8,13 @@ class CategoryController {
         try {
         if(data.user_id) {
             if(category?.name && category?.type === data.type) {
-            res.status(500).json({type: 'error',message : 'Name Category already exists !'});
+            res.status(200).json({type: 'error',message : 'Name Category already exists !'});
             } else {
             await CategoryModel.create(data)
             res.status(200).json({ type: 'success', message: 'Create Category Successfully!' })
             }
         } else {
-            res.status(500).json({message : 'Sever error'});
+            res.status(200).json({message : 'Sever error'});
         }
         }catch (err) {
             res.status(500).json('Server error');
