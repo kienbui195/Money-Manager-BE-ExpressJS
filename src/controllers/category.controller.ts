@@ -73,7 +73,19 @@ class CategoryController {
             res.status(500).json({ type: 'error',message: 'Server error' })
         }
     }
-
+    async getCategoryByID (req : Request, res : Response) {
+        try {
+            let id = req.params.id;
+            let category = await CategoryModel.findById({ _id : id})
+            if (category) {
+                res.status(200).json({type : "Success", category})
+            } else {
+            res.status(500).json({ type: 'error',message: "Find error" })
+            }
+        } catch (error) {
+            res.status(500).json({ type: 'error',message: error })
+        }
+    }
 }
 
 const categoryController = new CategoryController();
