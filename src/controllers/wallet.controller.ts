@@ -22,7 +22,6 @@ class WalletController {
             icon : data.icon,
             name : data.name,
             user_id: data.user_id,
-            // Lay id params
             amount : data.amount
         })
         let allWallet = await WalletModel.findOne({ name: wallet.name })

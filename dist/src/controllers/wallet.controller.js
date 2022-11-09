@@ -35,7 +35,6 @@ class WalletController {
                 icon: data.icon,
                 name: data.name,
                 user_id: data.user_id,
-                // Lay id params
                 amount: data.amount
             });
             let allWallet = yield wallet_schema_1.WalletModel.findOne({ name: wallet.name });
