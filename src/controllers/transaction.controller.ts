@@ -9,12 +9,12 @@ import getFormatDate from './../tools/formatDate';
 dayjs().format()
 class TransactionController {
     async postAddTransaction(req: Request, res: Response) {
-        const userId = req.body.user_id
-        const walletId = req.body.wallet_id;
-        const categoryId = req.body.category_id;
-        const walletUser = await WalletModel.findOne({ _id: walletId });
-        const category = await CategoryModel.findOne({ _id: categoryId });
         try {
+            const userId = req.body.user_id
+            const walletId = req.body.wallet_id;
+            const categoryId = req.body.category_id;
+            const walletUser = await WalletModel.findOne({ _id: walletId });
+            const category = await CategoryModel.findOne({ _id: categoryId });
             if (walletId && walletUser && category && userId && req.body.amount > 0 ) {
                 let newAmount: number = 0
                 if (category.type === 'expense') {
@@ -46,10 +46,9 @@ class TransactionController {
         }
     }
     async getAllTransaction(req: Request, res: Response) {
-        const userId = req.params.user_id
-
-        const transactions = await TransactionModel.find({ user_id: userId })
         try {
+            const userId = req.params.user_id
+            const transactions = await TransactionModel.find({ user_id: userId })
             if (transactions.length > 0) {
                 res.status(200).json({
                     type: 'success', data: {
@@ -194,14 +193,12 @@ class TransactionController {
 
 
     async getTransactionsInfoThisMonth(req: Request, res: Response) {
-        const month = new Date().getMonth() + 1;
-        const year = new Date().getFullYear();
-        let daysInThisMonth = new Date(year, month, 0).getDate();
-        const userID = req.params.id;
-        let transactions = await TransactionModel.find({ user_id: userID })
-
-
         try {
+            const month = new Date().getMonth() + 1;
+            const year = new Date().getFullYear();
+            let daysInThisMonth = new Date(year, month, 0).getDate();
+            const userID = req.params.id;
+            let transactions = await TransactionModel.find({ user_id: userID })
             if (transactions.length > 0) {
                 let list: any = []
                 transactions.forEach((transaction) => {
