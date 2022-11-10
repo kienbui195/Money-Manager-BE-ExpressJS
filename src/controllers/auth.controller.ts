@@ -32,6 +32,7 @@ class AuthController {
     }
 
     async postLogin(req: Request, res: Response) {
+        
         try {
             const data: any = req.body;
             const user = await UserModel.findOne({ email: data.email });
@@ -56,7 +57,7 @@ class AuthController {
                 }
             } else {
                 res.status(200).json({
-                    type: 'error',
+                    type: 'notexist',
                     message: 'Account does not exist yet!',
                 });
             }
@@ -67,9 +68,9 @@ class AuthController {
     }
 
     async verifyUser(req: Request, res: Response) {
-        let id = req.params.id
-        try {
 
+        try {
+            let id = req.params.id
             let idUser = await UserModel.findByIdAndUpdate({ _id: id }, { isVerify: true })
             if (idUser) {
                 res.status(200).json({ type: 'success', message: "Verify successfully" })
@@ -84,8 +85,9 @@ class AuthController {
 
     async isLogin(req: any, res: Response) {
 
-        const user = await UserModel.findOne({ _id: req.body.id })
+
         try {
+            const user = await UserModel.findOne({ _id: req.body.id })
             let token = req.body["token"];
             if (token) {
                 jwt.verify(token, '230193', (err: any, decoded: any) => {
@@ -115,9 +117,10 @@ class AuthController {
     }
 
     async loginWithGoogle(req: Request, res: Response) {
-        const data = req.body;
-        const user = await UserModel.findOne({ email: data.email })
+
         try {
+            const data = req.body;
+            const user = await UserModel.findOne({ email: data.email })
             if (user) {
                 await UserModel.findOneAndUpdate({ email: data.email }, {
                     google_id: data.google_id,

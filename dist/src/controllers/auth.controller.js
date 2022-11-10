@@ -70,7 +70,7 @@ class AuthController {
                 }
                 else {
                     res.status(200).json({
-                        type: 'error',
+                        type: 'notexist',
                         message: 'Account does not exist yet!',
                     });
                 }

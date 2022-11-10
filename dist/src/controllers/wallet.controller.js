@@ -8,8 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const wallet_schema_1 = require("../schemas/wallet.schema");
+const transaction_schema_1 = require("../schemas/transaction.schema");
+const formatDate_1 = __importDefault(require("../tools/formatDate"));
 class WalletController {
     getWalletByIdUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -30,13 +35,31 @@ class WalletController {
                 icon: data.icon,
                 name: data.name,
                 user_id: data.user_id,
-                // Lay id params
                 amount: data.amount
             });
             let allWallet = yield wallet_schema_1.WalletModel.findOne({ name: wallet.name });
             try {
                 if (!allWallet) {
-                    wallet.save();
+                    yield wallet.save();
+                    let Wallet = yield wallet_schema_1.WalletModel.findOne({ name: wallet.name, user_id: data.user_id });
+                    let today = new Date();
+                    let dateNow = (0, formatDate_1.default)(today);
+                    if (Wallet && wallet.amount > 0) {
+                        let transaction = {
+                            category_id: '',
+                            category_name: 'Add Wallet',
+                            category_icon: wallet.icon,
+                            category_type: 'income',
+                            date: dateNow,
+                            amount: wallet.amount,
+                            wallet_id: Wallet._id,
+                            wallet_name: wallet.name,
+                            wallet_icon: wallet.icon,
+                            user_id: data.user_id,
+                            note: '',
+                        };
+                        yield transaction_schema_1.TransactionModel.create(transaction);
+                    }
                     res.status(200).json({
                         type: 'success', message: {
                             wallet: wallet,
@@ -62,6 +85,37 @@ class WalletController {
                 if (walletFind) {
                     yield wallet_schema_1.WalletModel.findOneAndUpdate({ _id: idWallet }, wallet);
                     const newWallet = yield wallet_schema_1.WalletModel.findOne({ _id: idWallet });
+                    if (walletFind.amount !== wallet.amount) {
+                        let name;
+                        let type;
+                        let amount;
+                        if (walletFind.amount < wallet.amount) {
+                            name = 'Other Income';
+                            type = 'income';
+                            amount = wallet.amount - walletFind.amount;
+                        }
+                        else if (walletFind.amount > wallet.amount) {
+                            name = 'Other Expense';
+                            type = 'expense';
+                            amount = walletFind.amount - wallet.amount;
+                        }
+                        let today = new Date();
+                        let dateNow = (0, formatDate_1.default)(today);
+                        let transaction = {
+                            category_id: '',
+                            category_name: name,
+                            category_icon: wallet.icon,
+                            category_type: type,
+                            date: dateNow,
+                            amount: amount,
+                            wallet_id: walletFind._id,
+                            wallet_name: wallet.name,
+                            wallet_icon: wallet.icon,
+                            user_id: walletFind.user_id,
+                            note: '',
+                        };
+                        yield transaction_schema_1.TransactionModel.create(transaction);
+                    }
                     res.status(200).json({ type: 'success', message: newWallet });
                 }
                 else {
@@ -83,6 +137,7 @@ class WalletController {
                 }
                 else {
                     wallet === null || wallet === void 0 ? void 0 : wallet.delete();
+                    yield transaction_schema_1.TransactionModel.deleteMany({ wallet_id: id });
                     res.status(200).json({ type: 'success', message: 'Delete successfully!' });
                 }
             }
