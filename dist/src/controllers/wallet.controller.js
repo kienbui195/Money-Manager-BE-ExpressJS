@@ -85,35 +85,37 @@ class WalletController {
                 if (walletFind) {
                     yield wallet_schema_1.WalletModel.findOneAndUpdate({ _id: idWallet }, wallet);
                     const newWallet = yield wallet_schema_1.WalletModel.findOne({ _id: idWallet });
-                    let name;
-                    let type;
-                    let amount;
-                    if (walletFind.amount < wallet.amount) {
-                        name = 'Other Income';
-                        type = 'income';
-                        amount = wallet.amount - walletFind.amount;
+                    if (walletFind.amount !== wallet.amount) {
+                        let name;
+                        let type;
+                        let amount;
+                        if (walletFind.amount < wallet.amount) {
+                            name = 'Other Income';
+                            type = 'income';
+                            amount = wallet.amount - walletFind.amount;
+                        }
+                        else if (walletFind.amount > wallet.amount) {
+                            name = 'Other Expense';
+                            type = 'expense';
+                            amount = walletFind.amount - wallet.amount;
+                        }
+                        let today = new Date();
+                        let dateNow = (0, formatDate_1.default)(today);
+                        let transaction = {
+                            category_id: '',
+                            category_name: name,
+                            category_icon: wallet.icon,
+                            category_type: type,
+                            date: dateNow,
+                            amount: amount,
+                            wallet_id: walletFind._id,
+                            wallet_name: wallet.name,
+                            wallet_icon: wallet.icon,
+                            user_id: walletFind.user_id,
+                            note: '',
+                        };
+                        yield transaction_schema_1.TransactionModel.create(transaction);
                     }
-                    else if (walletFind.amount > wallet.amount) {
-                        name = 'Other Expense';
-                        type = 'expense';
-                        amount = walletFind.amount - wallet.amount;
-                    }
-                    let today = new Date();
-                    let dateNow = (0, formatDate_1.default)(today);
-                    let transaction = {
-                        category_id: '',
-                        category_name: name,
-                        category_icon: wallet.icon,
-                        category_type: type,
-                        date: dateNow,
-                        amount: amount,
-                        wallet_id: walletFind._id,
-                        wallet_name: wallet.name,
-                        wallet_icon: wallet.icon,
-                        user_id: walletFind.user_id,
-                        note: '',
-                    };
-                    yield transaction_schema_1.TransactionModel.create(transaction);
                     res.status(200).json({ type: 'success', message: newWallet });
                 }
                 else {
