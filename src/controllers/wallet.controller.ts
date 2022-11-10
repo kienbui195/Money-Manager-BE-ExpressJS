@@ -69,20 +69,21 @@ class WalletController {
             if (walletFind) {
                 await WalletModel.findOneAndUpdate({ _id: idWallet }, wallet)
                 const newWallet = await WalletModel.findOne({_id : idWallet})
-                let name;
-                let type;
-                let amount;
-                if(walletFind.amount < wallet.amount) {
-                     name = 'Other Income'
-                     type = 'income'
-                    amount = wallet.amount - walletFind.amount
-                }else if(walletFind.amount > wallet.amount) {
-                     name = 'Other Expense'
-                     type = 'expense'
-                    amount = walletFind.amount - wallet.amount
-                }
-                let today = new Date();
-                let dateNow = getFormatDate(today)
+                if(walletFind.amount !== wallet.amount) {
+                    let name;
+                    let type;
+                    let amount;
+                    if(walletFind.amount < wallet.amount) {
+                        name = 'Other Income'
+                        type = 'income'
+                        amount = wallet.amount - walletFind.amount
+                    }else if(walletFind.amount > wallet.amount) {
+                        name = 'Other Expense'
+                        type = 'expense'
+                        amount = walletFind.amount - wallet.amount
+                    }
+                    let today = new Date();
+                    let dateNow = getFormatDate(today)
                     let transaction = {
                         category_id: '',
                         category_name: name,
@@ -97,6 +98,7 @@ class WalletController {
                         note:'',
                     }
                     await TransactionModel.create(transaction)
+                }
                 res.status(200).json({ type: 'success', message: newWallet });
             } else {
                 res.status(200).json({ type: 'notexist', message: "Update wallet fail!!!" })
