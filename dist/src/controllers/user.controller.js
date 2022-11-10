@@ -16,9 +16,9 @@ const wallet_schema_1 = require("../schemas/wallet.schema");
 class UserController {
     getUserById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userId = req.params.id;
-            const user = yield user_model_1.UserModel.findOne({ _id: userId });
             try {
+                const userId = req.params.id;
+                const user = yield user_model_1.UserModel.findOne({ _id: userId });
                 if (user) {
                     res.status(200).json({ type: 'success', message: user });
                 }
@@ -33,9 +33,9 @@ class UserController {
     }
     updateUsername(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const id = req.params.id;
-            let user = yield user_model_1.UserModel.findOne({ _id: id });
             try {
+                const id = req.params.id;
+                let user = yield user_model_1.UserModel.findOne({ _id: id });
                 if (user) {
                     yield user_model_1.UserModel.findOneAndUpdate({ _id: id }, { username: req.body.username });
                     res.status(200).json({ type: 'success', message: 'Update success!' });
@@ -51,10 +51,10 @@ class UserController {
     }
     changePassword(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user_id = req.params.id;
-            const data = req.body;
-            const user = yield user_model_1.UserModel.findOne({ _id: user_id });
             try {
+                const user_id = req.params.id;
+                const data = req.body;
+                const user = yield user_model_1.UserModel.findOne({ _id: user_id });
                 if (user) {
                     if (data.old_pass == user.password) {
                         if (data.old_pass == data.new_pass) {
@@ -80,11 +80,11 @@ class UserController {
     }
     getProfile(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userID = req.params.id;
-            const wallets = yield wallet_schema_1.WalletModel.find({ user_id: userID });
-            const transactions = yield transaction_schema_1.TransactionModel.find({ user_id: userID });
-            const categorys = yield category_schema_1.CategoryModel.find({ user_id: userID });
             try {
+                const userID = req.params.id;
+                const wallets = yield wallet_schema_1.WalletModel.find({ user_id: userID });
+                const transactions = yield transaction_schema_1.TransactionModel.find({ user_id: userID });
+                const categorys = yield category_schema_1.CategoryModel.find({ user_id: userID });
                 res.status(200).json({
                     type: 'success',
                     data: {
