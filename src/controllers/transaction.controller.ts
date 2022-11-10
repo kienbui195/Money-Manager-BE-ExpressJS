@@ -8,7 +8,6 @@ import getFormatDate from './../tools/formatDate';
 
 dayjs().format()
 class TransactionController {
-
     async postAddTransaction(req: Request, res: Response) {
         const userId = req.body.user_id
         const walletId = req.body.wallet_id;
@@ -46,7 +45,6 @@ class TransactionController {
             res.status(500).json('Server error');
         }
     }
-
     async getAllTransaction(req: Request, res: Response) {
         const userId = req.params.user_id
 
@@ -60,7 +58,7 @@ class TransactionController {
                     }
                 })
             } else {
-                res.status(200).json({ type: 'notexist', message: 'Not Exist!' })
+                res.status(200).json({ type: 'notqa         st', message: 'Not Exist!' })
             }
 
         } catch (err) {
