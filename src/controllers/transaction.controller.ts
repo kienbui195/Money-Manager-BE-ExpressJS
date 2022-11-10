@@ -58,7 +58,7 @@ class TransactionController {
                     }
                 })
             } else {
-                res.status(200).json({ type: 'notqa         st', message: 'Not Exist!' })
+                res.status(200).json({ type: 'notexist', message: 'Not Exist!' })
             }
 
         } catch (err) {
@@ -68,13 +68,13 @@ class TransactionController {
     }
 
     async updateTransaction(req: Request, res: Response) {
-        const transactionId = req.params.id;
-        const transaction = await TransactionModel.findOne({ _id: transactionId });
-        const walletId = req.body.wallet_id;
-        const categoryId = req.body.category_id;
-        const walletUser = await WalletModel.findOne({ _id: walletId });
-        const category = await CategoryModel.findOne({ _id: categoryId });
         try {
+            const transactionId = req.params.id;
+            const transaction = await TransactionModel.findOne({ _id: transactionId });
+            const walletId = req.body.wallet_id;
+            const categoryId = req.body.category_id;
+            const walletUser = await WalletModel.findOne({ _id: walletId });
+            const category = await CategoryModel.findOne({ _id: categoryId });
             if (walletId && walletUser && category && transaction) {
                 if (transaction.category_type === 'expense') {
                     let updateAmount = walletUser.amount + transaction.amount - req.body.amount
