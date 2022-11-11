@@ -1,5 +1,6 @@
 import {Request, Response} from "express";
 import {CategoryModel} from "../schemas/category.schema";
+import {TransactionModel} from "../schemas/transaction.schema";
 
 class CategoryController {
     async createCategory(req: Request, res: Response) {
@@ -43,6 +44,7 @@ class CategoryController {
             let categoryID = await CategoryModel.findById({_id: req.params.id})
             if (categoryID) {
                 await CategoryModel.findByIdAndUpdate({_id: req.params.id}, category)
+                await TransactionModel.updateMany({ category_id:req.params.id},{category_name : req.body.name,category_icon : req.body.icon})
                 res.status(200).json({type: 'success', message: 'Update Category success!'});
             } else {
                 res.status(500).json({type: 'error', message: 'Can not find id Category!! Please try again !'})
