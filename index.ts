@@ -4,21 +4,22 @@ import bodyParser from "body-parser";
 import authRoute from "./src/routers/auth.route";
 import mongoose from "mongoose";
 import cors from 'cors';
-import  userRoute  from "./src/routers/user.route";
+import userRoute from "./src/routers/user.route";
 import walletRoute from "./src/routers/wallet.route";
 import transactionRoute from "./src/routers/transaction.route";
 import categoryRoute from "./src/routers/category.route"
 
 // dotenv.config();
-
-const port = process.env.PORT || 3001;
 const app: Express = express();
+const port = process.env.PORT || 3001;
+app.use(cors());
+
 
 mongoose.connect('mongodb+srv://admin395:neCVCjNrS4269Yiv@casem5reactjs.8wszhbp.mongodb.net/money-manager-project', () => {
     console.log('DB Connect!');
 })
 
-app.use(cors());
+
 app.use(express.static('src/public'));
 app.use(bodyParser.json());
 app.use(express.json());
