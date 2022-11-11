@@ -15,7 +15,7 @@ class CategoryController {
                     res.status(200).json({type: 'success', message: 'Create Category Successfully!'})
                 }
             } else {
-                res.status(200).json({message: 'Sever error'});
+                res.status(200).json({type:'notexits',message: 'Sever error'});
             }
         } catch (err) {
             res.status(500).json('Server error');
@@ -31,7 +31,7 @@ class CategoryController {
                 let categoryUser = categoryOfUser.concat(categories)
                 res.status(200).json({type: 'success', message: 'get categories successfully!', categoryUser});
             } else {
-                res.status(200).json({type: 'error', message: "category not exits!!!"})
+                res.status(200).json({type: 'notexits', message: "category not exits!!!"})
             }
         } catch (err) {
             res.status(500).json({type: 'error', message: 'Server error'})
@@ -47,7 +47,7 @@ class CategoryController {
                 await TransactionModel.updateMany({ category_id:req.params.id},{category_name : req.body.name,category_icon : req.body.icon})
                 res.status(200).json({type: 'success', message: 'Update Category success!'});
             } else {
-                res.status(500).json({type: 'error', message: 'Can not find id Category!! Please try again !'})
+                res.status(500).json({type: 'notexits', message: 'Can not find id Category!! Please try again !'})
             }
         } catch (error) {
             res.status(500).json({type: 'error', message: 'Server error'})
@@ -61,7 +61,7 @@ class CategoryController {
                 await CategoryModel.findByIdAndDelete({_id: req.params.id})
                 res.status(200).json({type: 'success', message: 'Delete Category success!'});
             } else {
-                res.status(200).json({type: 'error', message: 'Can not find id Category!! Please try again !'})
+                res.status(200).json({type: 'notexits', message: 'Can not find id Category!! Please try again !'})
             }
         } catch (err) {
             res.status(500).json({type: 'error', message: 'Server error'})
@@ -76,7 +76,7 @@ class CategoryController {
             if (categoryOfUser) {
                 res.status(200).json({type: "Success", categoryOfUser})
             } else {
-                res.status(200).json({type: "Error", message: "No Category"})
+                res.status(200).json({type: "notexits", message: "No Category"})
             }
         } catch (err) {
             res.status(500).json({type: 'error', message: 'Server error'})
@@ -90,7 +90,7 @@ class CategoryController {
             if (category) {
                 res.status(200).json({type: "Success", category})
             } else {
-                res.status(500).json({type: 'error', message: "Find error"})
+                res.status(500).json({type: 'notexits', message: "Find error"})
             }
         } catch (error) {
             res.status(500).json({type: 'error', message: error})
