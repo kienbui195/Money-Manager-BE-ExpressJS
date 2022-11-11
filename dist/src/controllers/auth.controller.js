@@ -89,8 +89,7 @@ class AuthController {
                     res.status(200).json({ type: 'success', message: "Verify successfully" });
                 }
                 else {
-                    yield UserModel.findOneAndUpdate({ _id: id }, { isVerify: true });
-                    res.status(200).json({ type: 'success', message: 'Verify Success' });
+                    res.status(200).json({ type: 'error', message: 'Verify error!' });
                 }
             }
             catch (error) {

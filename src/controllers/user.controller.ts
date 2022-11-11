@@ -14,7 +14,7 @@ class UserController {
             if (user) {
                 res.status(200).json({ type: 'success', message: user })
             } else {
-                res.status(200).json({ type: 'error', message: 'Something Wrong!' })
+                res.status(200).json({ type: 'notexits', message: 'Not exits user!' })
             }
         } catch (err) {
             res.status(500).json('Server error')
