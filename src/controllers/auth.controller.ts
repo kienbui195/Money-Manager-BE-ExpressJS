@@ -75,8 +75,7 @@ class AuthController {
             if (idUser) {
                 res.status(200).json({ type: 'success', message: "Verify successfully" })
             } else {
-                await UserModel.findOneAndUpdate({ _id: id }, { isVerify: true })
-                res.status(200).json({ type: 'success', message: 'Verify Success' })
+                res.status(200).json({ type: 'error', message: 'Verify error!' });
             }
         } catch (error) {
             res.status(500).json('Server error')

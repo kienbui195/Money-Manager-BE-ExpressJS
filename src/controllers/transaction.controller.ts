@@ -39,7 +39,7 @@ class TransactionController {
                 await TransactionModel.create(transaction);
                 res.status(200).json({ type: 'success', message: 'Added transaction successfully!' });
             } else {
-                res.status(204).json({ type: 'error', message: 'Please Create Wallet or Category!' })
+                res.status(204).json({ type: 'notexits', message: 'Please Create Wallet or Category!' })
             }
         } catch (err) {
             res.status(500).json('Server error');
@@ -98,7 +98,7 @@ class TransactionController {
                 await TransactionModel.findByIdAndUpdate({ _id: transactionId }, newTransaction);
                 res.status(200).json({ type: 'success', message: 'Update transaction successfully!' });
             } else {
-                res.status(200).json({ type: 'error', message: 'Update Error!' })
+                res.status(200).json({ type: 'notexits', message: 'Update Error!' })
             }
         } catch (err) {
             res.status(500).json('Server error');
@@ -128,7 +128,7 @@ class TransactionController {
                }
                 res.status(200).json({ type: 'success', message: 'Delete transaction successfully!' });
             } else {
-                res.status(204).json({ type: 'error', message: 'Delete Error!' })
+                res.status(204).json({ type: 'notexits', message: 'Delete Error!' })
             }
         } catch (err) {
             res.status(500).json('Server error');
@@ -183,7 +183,7 @@ class TransactionController {
                 if (transactionCustom.length > 0) {
                     res.status(200).json({ type: 'success', message: 'find transaction successfully!', data: {startDate:startDate, endDate:endDate, transactions: transactionCustom}});
                 } else {
-                    res.status(200).json({ type: 'success', message: 'transaction not exist!',data: {startDate:startDate, endDate:endDate, transactions: transactionCustom} })
+                    res.status(200).json({ type: 'notexits', message: 'transaction not exist!',data: {startDate:startDate, endDate:endDate, transactions: transactionCustom} })
                 }
             }
         } catch (err) {
