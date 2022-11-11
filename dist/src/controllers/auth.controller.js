@@ -82,8 +82,8 @@ class AuthController {
     }
     verifyUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            let id = req.params.id;
             try {
+                let id = req.params.id;
                 let idUser = yield UserModel.findByIdAndUpdate({ _id: id }, { isVerify: true });
                 if (idUser) {
                     res.status(200).json({ type: 'success', message: "Verify successfully" });
@@ -100,8 +100,8 @@ class AuthController {
     }
     isLogin(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield UserModel.findOne({ _id: req.body.id });
             try {
+                const user = yield UserModel.findOne({ _id: req.body.id });
                 let token = req.body["token"];
                 if (token) {
                     jsonwebtoken_1.default.verify(token, '230193', (err, decoded) => {
@@ -134,9 +134,9 @@ class AuthController {
     }
     loginWithGoogle(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const data = req.body;
-            const user = yield UserModel.findOne({ email: data.email });
             try {
+                const data = req.body;
+                const user = yield UserModel.findOne({ email: data.email });
                 if (user) {
                     yield UserModel.findOneAndUpdate({ email: data.email }, {
                         google_id: data.google_id,

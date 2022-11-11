@@ -18,9 +18,9 @@ const formatDate_1 = __importDefault(require("../tools/formatDate"));
 class WalletController {
     getWalletByIdUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            let id = req.params.id;
-            const wallet = yield wallet_schema_1.WalletModel.find({ user_id: id });
             try {
+                let id = req.params.id;
+                const wallet = yield wallet_schema_1.WalletModel.find({ user_id: id });
                 res.status(200).json({ type: 'success', wallet });
             }
             catch (err) {
@@ -30,15 +30,15 @@ class WalletController {
     }
     createWallet(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const data = req.body;
-            const wallet = new wallet_schema_1.WalletModel({
-                icon: data.icon,
-                name: data.name,
-                user_id: data.user_id,
-                amount: data.amount
-            });
-            let allWallet = yield wallet_schema_1.WalletModel.findOne({ name: wallet.name });
             try {
+                const data = req.body;
+                const wallet = new wallet_schema_1.WalletModel({
+                    icon: data.icon,
+                    name: data.name,
+                    user_id: data.user_id,
+                    amount: data.amount
+                });
+                let allWallet = yield wallet_schema_1.WalletModel.findOne({ name: wallet.name });
                 if (!allWallet) {
                     yield wallet.save();
                     let Wallet = yield wallet_schema_1.WalletModel.findOne({ name: wallet.name, user_id: data.user_id });
@@ -78,10 +78,10 @@ class WalletController {
     }
     updateWallet(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            const wallet = req.body;
-            let idWallet = req.params.id;
-            let walletFind = yield wallet_schema_1.WalletModel.findOne({ _id: idWallet });
             try {
+                const wallet = req.body;
+                let idWallet = req.params.id;
+                let walletFind = yield wallet_schema_1.WalletModel.findOne({ _id: idWallet });
                 if (walletFind) {
                     yield wallet_schema_1.WalletModel.findOneAndUpdate({ _id: idWallet }, wallet);
                     const newWallet = yield wallet_schema_1.WalletModel.findOne({ _id: idWallet });
@@ -129,8 +129,8 @@ class WalletController {
     }
     deleteWallet(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            let id = req.params.id;
             try {
+                let id = req.params.id;
                 let wallet = yield wallet_schema_1.WalletModel.findById(id);
                 if (!wallet) {
                     res.status(200).json({ type: 'notexist', message: "No Wallet Delete" });
@@ -148,9 +148,9 @@ class WalletController {
     }
     getTotalMoney(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            let id = req.params.id;
-            const findWalletByUser = yield wallet_schema_1.WalletModel.find({ user_id: id });
             try {
+                let id = req.params.id;
+                const findWalletByUser = yield wallet_schema_1.WalletModel.find({ user_id: id });
                 const total = findWalletByUser.reduce((total, item) => total = total + item.amount, 0);
                 res.status(200).json({ type: 'success', total });
             }
