@@ -85,6 +85,20 @@ class UserController {
         }
 
     }
+
+    async changeAva(req: Request, res: Response) {
+        try {
+            const userId = req.params.id;
+            await UserModel.findOneAndUpdate({ _id: userId }, { img: req.body.img })
+            res.status(200).json({
+                type: 'success',
+                message: 'Change avatar success!'
+            })
+        }
+        catch (err) {
+            res.status(500).json('Server error')
+        }
+    }
 }
 
 export default new UserController()
