@@ -27,7 +27,7 @@ class WalletController {
                 user_id: data.user_id,
                 amount: data.amount
             })
-            let allWallet = await WalletModel.findOne({ name: wallet.name })
+            let allWallet = await WalletModel.findOne({ user_id: data.user_id})
             if (!allWallet) {
                 await wallet.save()
                 let Wallet = await WalletModel.findOne({ name: wallet.name, user_id: data.user_id })
