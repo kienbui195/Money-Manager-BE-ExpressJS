@@ -35,8 +35,8 @@ const forgotPasswordByEmail = (req: Request, res: Response, id: string) => {
     let mainOptions = {
         from: "395 Group",
         to: `${req.body.email}`,
-        subject: '',
-        text: 'Password Recovery',
+        subject: 'Password Recovery',
+        text: '',
         html: content
     };
 
