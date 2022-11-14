@@ -6,16 +6,12 @@ class CategoryController {
     async createCategory(req: Request, res: Response) {
         try {
             let data = req.body
-            let category = await CategoryModel.findOne({name: data.name})
-            if (data.user_id) {
-                if (category?.name && category?.type === data.type) {
-                    res.status(200).json({type: 'error', message: 'Name Category already exists !'});
-                } else {
-                    await CategoryModel.create(data)
-                    res.status(200).json({type: 'success', message: 'Create Category Successfully!'})
-                }
+            let category = await CategoryModel.findOne({name: data.name , user_id : data.user_id})
+            if (!category?.name) {
+                await CategoryModel.create(data)
+                res.status(200).json({type: 'success', message: 'Create Category Successfully!'})
             } else {
-                res.status(200).json({type:'notexits',message: 'Sever error'});
+                res.status(200).json({type:'error',message: 'Category is already exist!'});
             }
         } catch (err) {
             res.status(500).json('Server error');

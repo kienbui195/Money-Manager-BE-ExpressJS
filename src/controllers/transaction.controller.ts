@@ -75,12 +75,29 @@ class TransactionController {
             const walletUser = await WalletModel.findOne({ _id: walletId });
             const category = await CategoryModel.findOne({ _id: categoryId });
             if (walletId && walletUser && category && transaction) {
-                if (transaction.category_type === 'expense') {
-                    let updateAmount = walletUser.amount + transaction.amount - req.body.amount
-                    await WalletModel.findOneAndUpdate({ _id: walletId }, { amount: updateAmount })
-                } else {
-                    let updateAmount = walletUser.amount - transaction.amount + req.body.amount
-                    await WalletModel.findOneAndUpdate({ _id: walletId }, { amount: updateAmount })
+                const walletTransaction = await WalletModel.findOne({ _id: transaction.wallet_id });
+                if(walletId === transaction.wallet_id && walletTransaction) {
+                    if (transaction.category_type === 'expense') {
+                        let updateAmount = walletUser.amount + transaction.amount - req.body.amount
+                        await WalletModel.findOneAndUpdate({ _id: walletId }, { amount: updateAmount })
+                    } else {
+                        let updateAmount = walletUser.amount - transaction.amount + req.body.amount
+                        await WalletModel.findOneAndUpdate({ _id: walletId }, { amount: updateAmount })
+                    }
+                }else if (walletId !== transaction.wallet_id && walletTransaction) {
+                    if (transaction.category_type === 'expense') {
+
+                        let updateAmount = walletTransaction.amount + transaction.amount
+                        let Amount = walletUser.amount - req.body.amount
+                        await WalletModel.findOneAndUpdate({ _id: transaction.wallet_id }, { amount: updateAmount })
+                        await WalletModel.findOneAndUpdate({ _id: walletId }, { amount: Amount })
+
+                    } else {
+                        let updateAmount = walletTransaction.amount - transaction.amount
+                        let Amount = walletUser.amount - transaction.amount + req.body.amount
+                        await WalletModel.findOneAndUpdate({ _id: transaction.wallet_id }, { amount: updateAmount })
+                        await WalletModel.findOneAndUpdate({ _id: walletId }, { amount: Amount })
+                    }
                 }
                 const newTransaction = {
                     category_id: categoryId,
