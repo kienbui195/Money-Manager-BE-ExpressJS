@@ -23,10 +23,10 @@ const forgotPasswordByEmail = (req: Request, res: Response, id: string) => {
     <div style="padding: 10px; background-color: white;">
        
     <h1 style="color: #ee1414; width: 100%; text-align: center; font-size: 20px;">395 Group| Money Manager Master!</h1>
-        <h1 style="color: #ee1414; width: 100%; text-align: center; font-size: 20px;">Welcome to our application !</h1>
+        <h1 style="color: #ee1414; width: 100%; text-align: center; font-size: 20px;">Change password</h1>
 
         <div style="color: black; font-size: 35px; width: 100%; text-align: center; height: 50px;">
-        <h3 style="color: #ee1414; width: 100%; text-align: center; font-size: 20px;">Click <a href="http://localhost:3000/user/forgotPassword/${id}">here</a> to forgot password!</h3>
+        <h3 style="color: #ee1414; width: 100%; text-align: center; font-size: 20px;">Click <a href="http://localhost:3000/user/forgotPassword/${id}">here</a> to verify!</h3>
         </div>
     </div>
     </div>
@@ -35,8 +35,8 @@ const forgotPasswordByEmail = (req: Request, res: Response, id: string) => {
     let mainOptions = {
         from: "395 Group",
         to: `${req.body.email}`,
-        subject: 'Khôi phục mật khẩu',
-        text: '',
+        subject: '',
+        text: 'Password Recovery',
         html: content
     };
 
