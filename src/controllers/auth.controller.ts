@@ -65,7 +65,6 @@ class AuthController {
         } catch (err) {
             res.status(500).json('Server error')
         }
-
     }
 
     async verifyUser(req: Request, res: Response) {
