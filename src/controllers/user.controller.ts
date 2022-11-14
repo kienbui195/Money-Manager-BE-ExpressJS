@@ -99,6 +99,24 @@ class UserController {
             res.status(500).json('Server error')
         }
     }
+
+    async forgotPassword(req: Request, res: Response) {
+        try {
+            const user_id = req.params.id;
+            console.log(user_id)
+            const data = req.body
+            console.log(data)
+            const user = await UserModel.findOne({ _id: user_id })
+            if (user) {
+                await UserModel.findOneAndUpdate({ _id: user_id }, { password: data.password })
+                res.status(200).json({ type: 'success', message: 'Change password success!' })
+            } else {
+                res.status(200).json({ type: 'notexist', message: 'Not exist user!' })
+            }
+        } catch (err) {
+            res.status(500).json('Server error')
+        }
+    }
 }
 
 export default new UserController()

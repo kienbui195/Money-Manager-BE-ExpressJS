@@ -2,6 +2,8 @@ const { UserModel } = require('../schemas/user.model')
 import express, { Request, Response } from 'express';
 import jwt from "jsonwebtoken";
 import verifyByEmail from "../tools/Verify Email/mail.setup";
+import forgotPasswordByEmail from "../tools/Verify Email/mail.forgotpassword";
+
 
 export const SECRET_KEY = '190896';
 
@@ -26,7 +28,6 @@ class AuthController {
             }
 
         } catch (error) {
-            console.log(error);
             res.status(500).json('Server error');
         }
     }
@@ -167,6 +168,31 @@ class AuthController {
             res.status(500).json('Server error')
         }
 
+    }
+
+    async forgotPassword(req: Request, res: Response) {
+        try {
+            let email = req.body.email;
+            let user = await UserModel.findOne({ email:email })
+            if (user) {
+                if(user.password !== null) {
+                    const newID = user.id
+                    forgotPasswordByEmail(req, res, newID)
+                    res.status(200).json({ type: 'success', message: "Forgot Password Successfully" });
+                }else {
+                    res.status(200).json({ type: 'error', message: "You login by google" })
+                }
+            }
+            else {
+                res.status(200).json({
+                    type: 'notexist',
+                    message: "User already exists"
+                });
+            }
+
+        } catch (error) {
+            res.status(500).json('Server error');
+        }
     }
 
 }

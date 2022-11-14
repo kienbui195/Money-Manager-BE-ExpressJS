@@ -8,6 +8,7 @@ userRoute.put('/edit-username/:id', userController.updateUsername);
 userRoute.put('/change-password/:id', userController.changePassword);
 userRoute.get('/profile/:id', userController.getProfile);
 userRoute.put('/change-avatar/:id', userController.changeAva);
+userRoute.post('/forgot-password/:id', userController.forgotPassword);
 
 export default userRoute;
 

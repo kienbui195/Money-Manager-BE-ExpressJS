@@ -8,5 +8,6 @@ authRoute.post('/login', authController.postLogin);
 authRoute.post('/verify/:id', authController.verifyUser);
 authRoute.post('/is-login', authController.isLogin);
 authRoute.post('/login-gg', authController.loginWithGoogle);
+authRoute.post('/forgotPassword', authController.forgotPassword)
 
 export default authRoute;
