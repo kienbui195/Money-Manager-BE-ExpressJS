@@ -8,7 +8,7 @@ transactionRoute.get('/get-all-transaction/:user_id', transactionController.getA
 transactionRoute.put('/update-transaction/:id', transactionController.updateTransaction)
 transactionRoute.delete('/delete-transaction/:id',transactionController.deleteTransaction)
 transactionRoute.post('/get-transaction-custom',transactionController.findTransactionCustom)
-transactionRoute.get('/transaction-this-month/:id', transactionController.getTransactionsInfoThisMonth)
+transactionRoute.get('/transaction-page/:id', transactionController.getTransactionsInfoThisMonth)
 
 
 export default transactionRoute;
