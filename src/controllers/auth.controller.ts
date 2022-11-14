@@ -173,7 +173,6 @@ class AuthController {
     async forgotPassword(req: Request, res: Response) {
         try {
             let email = req.body.email;
-            console.log(email)
             let user = await UserModel.findOne({ email:email })
             if (user) {
                 if(user.password !== null) {
