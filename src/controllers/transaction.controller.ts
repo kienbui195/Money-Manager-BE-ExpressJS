@@ -194,16 +194,15 @@ class TransactionController {
 
     async getTransactionsInfoThisMonth(req: Request, res: Response) {
         try {
-            const month = new Date().getMonth() + 1;
-            const year = new Date().getFullYear();
-            let daysInThisMonth = new Date(year, month, 0).getDate();
+            const data = req.body;
+            const start_date = data.startDate;
+            const end_date = data.endDate;
             const userID = req.params.id;
             let transactions = await TransactionModel.find({ user_id: userID })
             if (transactions.length > 0) {
                 let list: any = []
                 transactions.forEach((transaction) => {
-
-                    if (Date.parse(transaction.date) >= Date.parse(`${month}/01/${year}`) && Date.parse(transaction.date) <= Date.parse(`${month}/${daysInThisMonth}/${year}`)) {
+                    if (Date.parse(transaction.date) >= Date.parse(start_date) && Date.parse(transaction.date) <= Date.parse(end_date)) {
                         list.push(transaction)
                     }
                 })
