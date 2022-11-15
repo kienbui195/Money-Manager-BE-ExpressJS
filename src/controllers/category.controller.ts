@@ -7,7 +7,7 @@ class CategoryController {
         try {
             let data = req.body
             let category = await CategoryModel.findOne({name: data.name , user_id : data.user_id})
-            if (!category?.name) {
+            if (!category?.name && category?.type === data.type) {
                 await CategoryModel.create(data)
                 res.status(200).json({type: 'success', message: 'Create Category Successfully!'})
             } else {
