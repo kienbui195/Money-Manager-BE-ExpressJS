@@ -88,29 +88,35 @@ class AuthController {
         try {
             const user = await UserModel.findOne({ _id: req.body.id })
             let token = req.body["token"];
-            if (token) {
-                jwt.verify(token, '230193', (err: any, decoded: any) => {
-                    if (err) {
-                        return res.status(200).json({ type: 'No', message: 'Unauthorized' })
-                    } else {
-                        req.decoded = decoded;
-                        res.status(200).json({
-                            type: 'Yes',
-                            message: 'User is Login',
-                            data: {
-                                username: user.username,
-                                img: user.img
-                            }
-                        })
-                    }
-                })
+            if (user) {
+                if (token) {
+                    jwt.verify(token, '230193', (err: any, decoded: any) => {
+                        if (err) {
+                            return res.status(200).json({ type: 'No', message: 'Unauthorized' })
+                        } else {
+                            req.decoded = decoded;
+                            res.status(200).json({
+                                type: 'Yes',
+                                message: 'User is Login',
+                                data: {
+                                    username: user.username,
+                                    img: user.img
+                                }
+                            })
+                        }
+                    })
+                } else {
+                    return res.status(200).json({
+                        type: 'error',
+                        message: 'No token provided'
+                    })
+                }
             } else {
-                return res.status(200).json({
-                    type: 'error',
-                    message: 'No token provided'
+                res.status(200).json({
+                    type: 'No',
+                    message: 'User is notexist!'
                 })
             }
-
         } catch (err) {
             res.status(500).json({
                 message: 'Server error'
