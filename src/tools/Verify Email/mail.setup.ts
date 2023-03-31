@@ -26,7 +26,7 @@ const verifyByEmail = (req: Request, res: Response, id: string) => {
         <h1 style="color: #ee1414; width: 100%; text-align: center; font-size: 20px;">Welcome to our application !</h1>
 
         <div style="color: black; font-size: 35px; width: 100%; text-align: center; height: 50px;">
-        <h3 style="color: #ee1414; width: 100%; text-align: center; font-size: 20px;">Click <a href="https://money-manager-master.vercel.app/register/user/${id}">here</a> to verify your account !</h3>
+        <h3 style="color: #ee1414; width: 100%; text-align: center; font-size: 20px;">Click <a href="https://localhost:3001/register/user/${id}">here</a> to verify your account !</h3>
         </div>
     </div>
     </div>
