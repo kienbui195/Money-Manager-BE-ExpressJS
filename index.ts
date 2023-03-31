@@ -15,7 +15,8 @@ const port = process.env.PORT || 3001;
 app.use(cors());
 
 
-mongoose.connect('mongodb+srv://admin395:pxM21oMrcMzELrdN@casem5reactjs.8wszhbp.mongodb.net/?retryWrites=true&w=majority')
+// mongoose.connect('mongodb+srv://admin395:pxM21oMrcMzELrdN@casem5reactjs.8wszhbp.mongodb.net/?retryWrites=true&w=majority')
+mongoose.connect('mongodb+srv://admin395:pxM21oMrcMzELrdN@casem5reactjs.8wszhbp.mongodb.net/money-manager-project')
 
 
 app.use(express.static('src/public'));
