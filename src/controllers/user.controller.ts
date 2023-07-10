@@ -103,9 +103,7 @@ class UserController {
     async forgotPassword(req: Request, res: Response) {
         try {
             const user_id = req.params.id;
-            console.log(user_id)
             const data = req.body
-            console.log(data)
             const user = await UserModel.findOne({ _id: user_id })
             if (user) {
                 await UserModel.findOneAndUpdate({ _id: user_id }, { password: data.password })

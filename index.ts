@@ -14,10 +14,9 @@ const app: Express = express();
 const port = process.env.PORT || 3001;
 app.use(cors());
 
+const uri ='mongodb+srv://admin395:t9sIcnd7PbYLg6LH@casem5reactjs.8wszhbp.mongodb.net/?retryWrites=true&w=majority'
 
-// mongoose.connect('mongodb+srv://admin395:pxM21oMrcMzELrdN@casem5reactjs.8wszhbp.mongodb.net/?retryWrites=true&w=majority')
-mongoose.connect('mongodb+srv://admin395:pxM21oMrcMzELrdN@casem5reactjs.8wszhbp.mongodb.net/money-manager-project')
-
+mongoose.connect(uri)
 
 app.use(express.static('src/public'));
 app.use(bodyParser.json());

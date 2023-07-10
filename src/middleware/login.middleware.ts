@@ -20,7 +20,6 @@ export const auth = (req:Request, res: Response, next: NextFunction) => {
                     });
                 } else {
                     req.body.decoded = data;
-                    console.log(data)
                     next();
                 }
             });

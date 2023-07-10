@@ -1,5 +1,4 @@
 import {Schema, model} from "mongoose";
-import { IWallet } from "./wallet.schema";
 
 export interface IUser {
     username: string,
@@ -22,7 +21,7 @@ const userSchema = new Schema<IUser>({
     },
     google_id: String,
     wallet_id : String,
-});
+},{ timestamps: true });
 
 const UserModel = model<IUser>('User', userSchema);
 
